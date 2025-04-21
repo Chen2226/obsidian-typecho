@@ -1,11 +1,11 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
+	"id": "obsidian-typecho",
+	"name": "Typecho",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "将obsidian笔记同步到typecho",
+	"author": "Chen",
+	"authorUrl": "https://github.com/Chen2226/obsidian-typecho",
+	"fundingUrl": "",
 	"isDesktopOnly": false
 }
