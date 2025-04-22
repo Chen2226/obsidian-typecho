@@ -1,21 +1,16 @@
 import { Notice, Plugin } from "obsidian";
+import { SettingTab } from "./setting/SettingTab";
+import {
+	TypechoPluginSettings,
+	DEFAULT_SETTINGS,
+} from "./setting/PluginSettings";
 
-// Remember to rename these classes and interfaces!
-
-interface MyPluginSettings {
-	mySetting: string;
-}
-
-const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: "default",
-};
-
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
-
+let settings: TypechoPluginSettings;
+export default class TypechoPlugin extends Plugin {
 	async onload() {
 		console.log("loading plugin");
 		await this.loadSettings();
+		this.addSettingTab(new SettingTab(this.app, this, settings));
 
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon(
@@ -33,14 +28,14 @@ export default class MyPlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign(
-			{},
-			DEFAULT_SETTINGS,
-			await this.loadData()
-		);
+		settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 	}
 
 	async saveSettings() {
-		await this.saveData(this.settings);
+		await this.saveData(settings);
 	}
+}
+
+export function getSettings() {
+	return settings;
 }
