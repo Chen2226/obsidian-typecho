@@ -1,6 +1,7 @@
 import plugin from "../main";
-import { App, PluginSettingTab, Setting, requestUrl, Notice } from "obsidian";
+import { App, PluginSettingTab, Setting } from "obsidian";
 import { TypechoPluginSettings } from "./PluginSettings";
+import { HttpUtils } from "../utils/request";
 
 export class SettingTab extends PluginSettingTab {
 	plugin: plugin;
@@ -27,7 +28,9 @@ export class SettingTab extends PluginSettingTab {
 			.setDesc("Typecho域名")
 			.addText((text) =>
 				text
-					.setPlaceholder("域名/index.php/api，或者配置了伪静态，请自行检查")
+					.setPlaceholder(
+						"域名/index.php/api，或者配置了伪静态，请自行检查"
+					)
 					.setValue(this.settings.Host)
 					.onChange(async (value) => {
 						this.settings.Host = value;
@@ -60,32 +63,12 @@ export class SettingTab extends PluginSettingTab {
 
 	private async refreshUserList(containerEl: HTMLElement): Promise<void> {
 		let userList: string | any[] = [];
-		console.log(this.settings);
 		if (this.settings.Host && this.settings.Token) {
 			this.initTab(containerEl);
-			await requestUrl({
-				url: this.settings.Host + "/userList",
-				method: "get",
-				headers: {
-					token: this.settings.Token,
-					"Content-Type": "application/json",
-				},
-			})
-				.then(async (res) => {
-					console.log(res);
-					const data = res.json;
-					if (data.status == "success") {
-						userList = data.data;
-
-						await this.plugin.saveSettings();
-					} else {
-						new Notice(data.message);
-					}
-				})
-				.catch((err) => {
-					console.log(err);
-					new Notice(err);
-				});
+			await HttpUtils.get("/userList").then(async (res: any) => {
+				userList = res.data;
+				await this.plugin.saveSettings();
+			});
 		}
 		new Setting(containerEl)
 			.setName("User")

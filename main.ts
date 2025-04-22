@@ -1,9 +1,10 @@
-import { Notice, Plugin } from "obsidian";
-import { SettingTab } from "./setting/SettingTab";
+import { Plugin } from "obsidian";
+import { SettingTab } from "./setting/settingTab";
+import { PushModal } from "./view/pushModal";
 import {
 	TypechoPluginSettings,
 	DEFAULT_SETTINGS,
-} from "./setting/PluginSettings";
+} from "./setting/pluginSettings";
 
 let settings: TypechoPluginSettings;
 export default class TypechoPlugin extends Plugin {
@@ -12,12 +13,11 @@ export default class TypechoPlugin extends Plugin {
 		await this.loadSettings();
 		this.addSettingTab(new SettingTab(this.app, this, settings));
 
-		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon(
 			"book-copy",
 			"同步到Typecho",
 			(evt: MouseEvent) => {
-				new Notice("This is a notice!");
+				new PushModal(this.app).open();
 			}
 		);
 		ribbonIconEl.addClass("my-plugin-ribbon-class");
