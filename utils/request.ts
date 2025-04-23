@@ -1,5 +1,6 @@
 import { requestUrl, RequestUrlResponse, Notice } from "obsidian";
 import { getSettings } from "../main";
+import { ResponseType } from "../utils/responseType";
 
 export class HttpUtils {
 	private static getHeaders() {
@@ -21,7 +22,7 @@ export class HttpUtils {
 	public static async get(
 		url: string,
 		headers?: Record<string, string>
-	): Promise<RequestUrlResponse> {
+	): Promise<ResponseType> {
 		return this.request("GET", url, null, headers);
 	}
 
@@ -36,7 +37,7 @@ export class HttpUtils {
 		url: string,
 		body: any,
 		headers?: Record<string, string>
-	): Promise<RequestUrlResponse> {
+	): Promise<ResponseType> {
 		return this.request("POST", url, body, headers);
 	}
 
@@ -53,7 +54,7 @@ export class HttpUtils {
 		url: string,
 		body?: any,
 		headers?: Record<string, string>
-	): Promise<RequestUrlResponse> {
+	): Promise<ResponseType> {
 		headers = {
 			...headers,
 			...this.getHeaders(),
@@ -71,10 +72,11 @@ export class HttpUtils {
 				requestOptions
 			);
 			console.log(response.json);
-			if (response.json.status === "success") {
-				return response.json;
+			const res: ResponseType = response.json;
+			if (res.status === "success") {
+				return res;
 			} else {
-				new Notice(response.json.message);
+				new Notice(res.message);
 				throw new Error(`HTTP Error: - ${response.json.message}`);
 			}
 		} catch (error) {
