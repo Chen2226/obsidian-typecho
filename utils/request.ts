@@ -1,4 +1,4 @@
-import { requestUrl, RequestUrlResponse,Notice } from "obsidian";
+import { requestUrl, RequestUrlResponse, Notice } from "obsidian";
 import { getSettings } from "../main";
 
 export class HttpUtils {
@@ -8,9 +8,9 @@ export class HttpUtils {
 			token: getSettings().Token,
 		};
 	}
-    private static getHost() {
-        return getSettings().Host;
-    }
+	private static getHost() {
+		return getSettings().Host;
+	}
 
 	/**
 	 * 发起 GET 请求
@@ -22,12 +22,6 @@ export class HttpUtils {
 		url: string,
 		headers?: Record<string, string>
 	): Promise<RequestUrlResponse> {
-		headers = {
-			...headers,
-			...this.getHeaders(),
-		};
-        console.log(headers)
-        console.log(this.getHost())
 		return this.request("GET", url, null, headers);
 	}
 
@@ -43,10 +37,6 @@ export class HttpUtils {
 		body: any,
 		headers?: Record<string, string>
 	): Promise<RequestUrlResponse> {
-		headers = {
-			...headers,
-			...this.getHeaders(),
-		};
 		return this.request("POST", url, body, headers);
 	}
 
@@ -75,19 +65,21 @@ export class HttpUtils {
 			body: body ? JSON.stringify(body) : undefined,
 		};
 
-        console.log(requestOptions)
+		console.log(requestOptions);
 		try {
-			const response = await requestUrl(requestOptions);
-            console.log(response.json)
+			const response: RequestUrlResponse = await requestUrl(
+				requestOptions
+			);
+			console.log(response.json);
 			if (response.json.status === "success") {
 				return response.json;
 			} else {
-                new Notice(response.json.message)
+				new Notice(response.json.message);
 				throw new Error(`HTTP Error: - ${response.json.message}`);
 			}
 		} catch (error) {
 			console.error(`Request failed: ${url}`, error);
-            new Notice(error)
+			new Notice(error);
 			throw error;
 		}
 	}
