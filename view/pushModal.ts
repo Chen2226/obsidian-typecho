@@ -56,7 +56,7 @@ export class PushModal extends Modal {
 			attr: {
 				type: "text",
 				placeholder: "请输入标题",
-				style: "width: 100%; padding: 5px; margin-top: 15px;margin-bottom: 15px;",
+				style: "width: 100%; margin-top: 15px; margin-bottom: 15px; border: 1px solid var(--background-modifier-border); border-radius: 4px; color: var(--text-normal);",
 			},
 		});
 		titleInput.addEventListener("input", (event) => {
@@ -69,7 +69,9 @@ export class PushModal extends Modal {
 		const activeFile = this.app.workspace.getActiveFile();
 		this.activeFilePath = activeFile?.path || "";
 		const selectEl = contentEl.createEl("select", {
-			attr: { style: "width: 100%; padding: 5px;" },
+			attr: {
+				style: "width: 100%; margin-bottom: 15px; border: 1px solid var(--background-modifier-border); border-radius: 4px; color: var(--text-normal);",
+			},
 		});
 		for (const file of files) {
 			const option = selectEl.createEl("option", {
@@ -103,7 +105,9 @@ export class PushModal extends Modal {
 		// 发布按钮
 		const button = contentEl.createEl("button", {
 			text: "发布",
-			attr: { style: "margin-top: 15px;" },
+			attr: {
+				style: "margin-top: 15px; padding: 8px 16px; border: none; border-radius: 4px; color: var(--text-on-accent); cursor: pointer;",
+			},
 		});
 		button.addEventListener("click", async () => {
 			if (this.title === "" || this.content === "") {
@@ -180,7 +184,7 @@ export class PushModal extends Modal {
 		// 创建一个分组容器
 		const groupContainer = container.createDiv({
 			attr: {
-				style: "border: 1px solid #ddd; padding: 10px; border-radius: 5px;display: flex;flex-wrap: wrap;",
+				style: "border: 1px solid var(--background-modifier-border); padding: 10px; border-radius: 5px; display: flex; flex-wrap: wrap; ",
 			},
 		});
 
@@ -188,7 +192,7 @@ export class PushModal extends Modal {
 		groupContainer.createEl("h4", {
 			text: "分类(可选)",
 			attr: {
-				style: "margin: 0 0 10px 0; font-weight: bold;width: 100%",
+				style: "margin: 0 0 10px 0; font-weight: bold; width: 100%; color: var(--text-normal);",
 			},
 		});
 
@@ -197,20 +201,28 @@ export class PushModal extends Modal {
 			// 每个分类项的容器
 			const categoryWrapper = groupContainer.createDiv({
 				attr: {
-					style: "display: flex; align-items: center; margin: 5px 0; padding: 5px; border-radius: 3px;",
+					style: "display: flex; align-items: center; margin: 5px 10px 5px 0; padding: 5px 10px; border-radius: 3px; color: var(--text-normal); cursor: pointer;",
 				},
 			});
 
 			// 创建复选框
 			const checkbox = categoryWrapper.createEl("input", {
 				type: "checkbox",
+				id: `category-${item.mid}`, // 为复选框添加唯一 ID
 				value: item.mid,
+				attr: {
+					style: "margin-right: 5px; accent-color: var(--interactive-accent);",
+				},
 			});
 
-			// 创建分类名称
-			categoryWrapper.createEl("label", {
+			// 创建标签，并关联复选框
+			const label = categoryWrapper.createEl("label", {
 				text: item.name,
-				attr: { style: "margin-left: 10px; font-size: 14px;" },
+				attr: {
+					id: item.mid,
+					for: `category-${item.mid}`, // 关联复选框
+					style: "cursor: pointer; font-size: 14px; color: var(--text-normal);",
+				},
 			});
 
 			// 监听复选框变化
@@ -224,6 +236,10 @@ export class PushModal extends Modal {
 					}
 				}
 				console.log("当前选中的分类:", selectedCategories);
+			});
+
+			label.addEventListener("click", (e) => {
+				checkbox.click();
 			});
 		});
 	}
@@ -242,7 +258,7 @@ export class PushModal extends Modal {
 		// 创建一个分组容器
 		const groupContainer = container.createDiv({
 			attr: {
-				style: "border: 1px solid #ddd; padding: 10px; border-radius: 5px;display: flex;flex-wrap: wrap;",
+				style: "border: 1px solid var(--background-modifier-border); padding: 10px; border-radius: 5px; display: flex; flex-wrap: wrap;",
 			},
 		});
 
@@ -250,23 +266,39 @@ export class PushModal extends Modal {
 		groupContainer.createEl("h4", {
 			text: "标签(可选)",
 			attr: {
-				style: "margin: 0 0 10px 0; font-weight: bold;width: 100%",
+				style: "margin: 0 0 10px 0; font-weight: bold; width: 100%; color: var(--text-normal);",
 			},
 		});
+
+		// 填充复选框
 		tags.forEach((item: any) => {
-			const categoryWrapper = groupContainer.createDiv({
+			// 每个标签项的容器
+			const tagWrapper = groupContainer.createDiv({
 				attr: {
-					style: "display: flex; align-items: center; margin: 5px 0; padding: 5px; border-radius: 3px;",
+					style: "display: flex; align-items: center; margin: 5px 10px 5px 0; padding: 5px 10px; border-radius: 3px; color: var(--text-normal); cursor: pointer;",
 				},
 			});
-			const checkbox = categoryWrapper.createEl("input", {
+
+			// 创建复选框
+			const checkbox = tagWrapper.createEl("input", {
 				type: "checkbox",
+				id: `tag-${item.mid}`, // 为复选框添加唯一 ID
 				value: item.mid,
+				attr: {
+					style: "margin-right: 5px; accent-color: var(--interactive-accent);",
+				},
 			});
-			categoryWrapper.createEl("label", {
+
+			// 创建标签，并关联复选框
+			const label = tagWrapper.createEl("label", {
 				text: item.name,
-				attr: { style: "margin-left: 10px; font-size: 14px;" },
+				attr: {
+					for: `tag-${item.mid}`, // 关联复选框
+					style: "cursor: pointer; font-size: 14px; color: var(--text-normal);",
+				},
 			});
+
+			// 监听复选框变化
 			checkbox.addEventListener("change", () => {
 				if (checkbox.checked) {
 					selectedTags.push(item.mid); // 添加到选中列表
@@ -277,6 +309,10 @@ export class PushModal extends Modal {
 					}
 				}
 				console.log("当前选中的标签:", selectedTags);
+			});
+
+			label.addEventListener("click", (e) => {
+				checkbox.click();
 			});
 		});
 	}
