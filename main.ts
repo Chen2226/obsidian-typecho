@@ -1,10 +1,10 @@
 import { Plugin, addIcon } from "obsidian";
-import { SettingTab } from "./setting/settingTab";
-import { PushModal } from "./view/pushModal";
+import { settingTab } from "./setting/setting_tab";
+import { PushModal } from "./view/push_modal";
 import {
 	TypechoPluginSettings,
 	DEFAULT_SETTINGS,
-} from "./setting/pluginSettings";
+} from "./setting/plugin_settings";
 
 let settings: TypechoPluginSettings;
 export default class TypechoPlugin extends Plugin {
@@ -16,7 +16,7 @@ export default class TypechoPlugin extends Plugin {
 		);
 
 		await this.loadSettings();
-		this.addSettingTab(new SettingTab(this.app, this, settings));
+		this.addSettingTab(new settingTab(this.app, this, settings));
 
 		this.addRibbonIcon("typecho", "同步到Typecho", (evt: MouseEvent) => {
 			new PushModal(this.app).open();

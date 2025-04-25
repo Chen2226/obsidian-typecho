@@ -1,6 +1,6 @@
 import { App, Modal, Notice } from "obsidian";
 import { getSettings } from "../main";
-import { addMetas } from "./addMetas";
+import { addMetas } from "./add_metas";
 import { HttpUtils } from "../utils/request";
 
 export class PushModal extends Modal {

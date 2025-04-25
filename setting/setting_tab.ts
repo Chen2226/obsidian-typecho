@@ -1,9 +1,10 @@
 import plugin from "../main";
 import { App, PluginSettingTab, Setting } from "obsidian";
-import { TypechoPluginSettings } from "./pluginSettings";
+import { TypechoPluginSettings } from "./plugin_settings";
 import { HttpUtils } from "../utils/request";
 
-export class SettingTab extends PluginSettingTab {
+
+export class settingTab extends PluginSettingTab {
 	plugin: plugin;
 	settings: TypechoPluginSettings;
 

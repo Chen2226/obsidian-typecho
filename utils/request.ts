@@ -1,6 +1,6 @@
 import { requestUrl, RequestUrlResponse, Notice } from "obsidian";
 import { getSettings } from "../main";
-import { ResponseType } from "../utils/responseType";
+import { ResponseType } from "./response_type";
 
 export class HttpUtils {
 	private static getHeaders() {

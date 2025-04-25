@@ -8,7 +8,6 @@ export interface TypechoPluginSettings {
 		mail: string;
 	};
 }
-
 export const DEFAULT_SETTINGS: TypechoPluginSettings = {
 	Host: "",
 	Token: "",
