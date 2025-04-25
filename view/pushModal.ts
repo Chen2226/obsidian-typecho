@@ -1,5 +1,6 @@
 import { App, Modal, Notice } from "obsidian";
 import { getSettings } from "../main";
+import { addMetas } from "./addMetas";
 import { HttpUtils } from "../utils/request";
 
 export class PushModal extends Modal {
@@ -12,44 +13,16 @@ export class PushModal extends Modal {
 	content = "";
 	selectedTags: string[] = [];
 	selectedCategories: string[] = [];
+	categoriesDom: HTMLElement;
+	tagsDom: HTMLElement;
 	activeFilePath: string;
 
 	async onOpen() {
 		const { contentEl } = this;
 		contentEl.createEl("h2", { text: "发布到 Typecho" });
-		try {
-			this.notice = new Notice("获取分类中...");
-			const categoriesResponse = await HttpUtils.get("/categories");
-			const categories = categoriesResponse.data || [];
-			if (categories.length > 0) {
-				const categoriesContainer = contentEl.createDiv({
-					attr: { style: "margin-bottom: 15px;" },
-				});
-				this.createCategoryCheckboxes(
-					categories,
-					categoriesContainer,
-					this.selectedCategories
-				);
-				this.notice.hide();
-			}
-			this.notice = new Notice("获取标签中...");
-			const tagsResponse = await HttpUtils.get("/tags");
-			const tags = tagsResponse.data || [];
-			if (tags.length > 0) {
-				const tagsContainer = contentEl.createDiv({
-					attr: { style: "margin-bottom: 15px;" },
-				});
-				this.createTagCheckboxes(
-					tags,
-					tagsContainer,
-					this.selectedTags
-				);
-				this.notice.hide();
-			}
-		} catch (error) {
-			new Notice("获取失败，请检查网络或 API 配置");
-			console.error("获取失败:", error);
-		}
+
+		await this.getCategories(contentEl);
+		await this.getTags(contentEl);
 
 		// 标题部分
 		const titleInput = contentEl.createEl("input", {
@@ -171,31 +144,86 @@ export class PushModal extends Modal {
 	}
 
 	/**
+	 * 获取分类
+	 */
+	async getCategories(contentEl: HTMLElement) {
+		if (this.categoriesDom) {
+			while (this.categoriesDom.firstChild) {
+				this.categoriesDom.removeChild(this.categoriesDom.firstChild);
+			}
+		} else {
+			this.categoriesDom = contentEl.createDiv({
+				attr: { style: "margin-bottom: 15px;" },
+			});
+		}
+	
+		this.selectedCategories = [];
+		this.notice = new Notice("获取分类中...");
+		const categoriesResponse = await HttpUtils.get("/categories");
+		const categories = categoriesResponse.data || [];
+	
+		if (categories.length > 0) {
+			requestAnimationFrame(() => {
+				this.createCategoryCheckboxes(categories);
+			});
+			this.notice.hide();
+		}
+	}
+
+	async getTags(contentEl: HTMLElement) {
+		if (this.tagsDom) {
+			while (this.tagsDom.firstChild) {
+				this.tagsDom.removeChild(this.tagsDom.firstChild);
+			}
+		} else {
+			this.tagsDom = contentEl.createDiv({
+				attr: { style: "margin-bottom: 15px;" },
+			});
+		}
+
+		this.selectedTags = [];
+		this.notice = new Notice("获取标签中...");
+		const tagsResponse = await HttpUtils.get("/tags");
+		const tags = tagsResponse.data || [];
+
+		if (tags.length > 0) {
+			requestAnimationFrame(() => {
+				this.createTagCheckboxes(tags);
+			});
+			this.notice.hide();
+		}
+	}
+
+	/**
 	 * 创建分类复选框
 	 * @param categories 分类数据数组
 	 * @param container 容器元素
 	 * @param selectedCategories 存储选中的分类 ID 的数组
 	 */
-	private createCategoryCheckboxes(
-		categories: any[],
-		container: HTMLElement,
-		selectedCategories: string[]
-	) {
+	private createCategoryCheckboxes(categories: []) {
 		// 创建一个分组容器
-		const groupContainer = container.createDiv({
+		const groupContainer = this.categoriesDom.createDiv({
 			attr: {
-				style: "border: 1px solid var(--background-modifier-border); padding: 10px; border-radius: 5px; display: flex; flex-wrap: wrap; ",
+				style: "border: 1px solid var(--background-modifier-border); padding: 10px; border-radius: 5px; display: flex; flex-wrap: wrap;",
 			},
 		});
-
+	
 		// 添加标题
 		groupContainer.createEl("h4", {
 			text: "分类(可选)",
 			attr: {
-				style: "margin: 0 0 10px 0; font-weight: bold; width: 100%; color: var(--text-normal);",
+				style: "margin: 0 0 10px 0; font-weight: bold; color: var(--text-normal);",
 			},
 		});
-
+	
+		this.addMetasBtn(groupContainer, "category");
+	
+		groupContainer.createEl("span", {
+			attr: {
+				style: "width: 100%;height: 1px",
+			},
+		});
+	
 		// 填充复选框
 		categories.forEach((item: any) => {
 			// 每个分类项的容器
@@ -204,40 +232,39 @@ export class PushModal extends Modal {
 					style: "display: flex; align-items: center; margin: 5px 10px 5px 0; padding: 5px 10px; border-radius: 3px; color: var(--text-normal); cursor: pointer;",
 				},
 			});
-
+	
 			// 创建复选框
 			const checkbox = categoryWrapper.createEl("input", {
 				type: "checkbox",
-				id: `category-${item.mid}`, // 为复选框添加唯一 ID
 				value: item.mid,
 				attr: {
+					id: `category-${item.mid}`,
 					style: "margin-right: 5px; accent-color: var(--interactive-accent);",
 				},
 			});
-
+	
 			// 创建标签，并关联复选框
 			const label = categoryWrapper.createEl("label", {
 				text: item.name,
 				attr: {
-					id: item.mid,
 					for: `category-${item.mid}`, // 关联复选框
 					style: "cursor: pointer; font-size: 14px; color: var(--text-normal);",
 				},
 			});
-
+	
 			// 监听复选框变化
 			checkbox.addEventListener("change", () => {
 				if (checkbox.checked) {
-					selectedCategories.push(item.mid); // 添加到选中列表
+					this.selectedCategories.push(item.mid); // 添加到选中列表
 				} else {
-					const index = selectedCategories.indexOf(item.mid);
+					const index = this.selectedCategories.indexOf(item.mid);
 					if (index > -1) {
-						selectedCategories.splice(index, 1); // 从选中列表移除
+						this.selectedCategories.splice(index, 1); // 从选中列表移除
 					}
 				}
-				console.log("当前选中的分类:", selectedCategories);
+				console.log("当前选中的分类:", this.selectedCategories);
 			});
-
+	
 			label.addEventListener("click", (e) => {
 				checkbox.click();
 			});
@@ -250,70 +277,89 @@ export class PushModal extends Modal {
 	 * @param container 容器元素
 	 * @param selectedTags 存储选中的标签 ID 的数组
 	 */
-	private createTagCheckboxes(
-		tags: any[],
-		container: HTMLElement,
-		selectedTags: string[]
-	) {
-		// 创建一个分组容器
-		const groupContainer = container.createDiv({
+	private createTagCheckboxes(tags: any[]) {
+		const groupContainer = this.tagsDom.createDiv({
 			attr: {
 				style: "border: 1px solid var(--background-modifier-border); padding: 10px; border-radius: 5px; display: flex; flex-wrap: wrap;",
 			},
 		});
-
-		// 添加标题
+	
 		groupContainer.createEl("h4", {
 			text: "标签(可选)",
 			attr: {
-				style: "margin: 0 0 10px 0; font-weight: bold; width: 100%; color: var(--text-normal);",
+				style: "margin: 0 0 10px 0; font-weight: bold; color: var(--text-normal);",
 			},
 		});
-
-		// 填充复选框
+	
+		this.addMetasBtn(groupContainer, "tag");
+		groupContainer.createEl("span", {
+			attr: {
+				style: "width: 100%;height: 1px",
+			},
+		});
+	
 		tags.forEach((item: any) => {
-			// 每个标签项的容器
 			const tagWrapper = groupContainer.createDiv({
 				attr: {
 					style: "display: flex; align-items: center; margin: 5px 10px 5px 0; padding: 5px 10px; border-radius: 3px; color: var(--text-normal); cursor: pointer;",
 				},
 			});
-
-			// 创建复选框
+	
 			const checkbox = tagWrapper.createEl("input", {
 				type: "checkbox",
-				id: `tag-${item.mid}`, // 为复选框添加唯一 ID
 				value: item.mid,
 				attr: {
+					id: `tag-${item.mid}`,
 					style: "margin-right: 5px; accent-color: var(--interactive-accent);",
 				},
 			});
-
-			// 创建标签，并关联复选框
+	
 			const label = tagWrapper.createEl("label", {
 				text: item.name,
 				attr: {
-					for: `tag-${item.mid}`, // 关联复选框
+					for: `tag-${item.mid}`,
 					style: "cursor: pointer; font-size: 14px; color: var(--text-normal);",
 				},
 			});
-
-			// 监听复选框变化
+	
 			checkbox.addEventListener("change", () => {
 				if (checkbox.checked) {
-					selectedTags.push(item.mid); // 添加到选中列表
+					this.selectedTags.push(item.mid);
 				} else {
-					const index = selectedTags.indexOf(item.mid);
+					const index = this.selectedTags.indexOf(item.mid);
 					if (index > -1) {
-						selectedTags.splice(index, 1); // 从选中列表移除
+						this.selectedTags.splice(index, 1);
 					}
 				}
-				console.log("当前选中的标签:", selectedTags);
+				console.log("当前选中的标签:", this.selectedTags);
 			});
-
+	
 			label.addEventListener("click", (e) => {
 				checkbox.click();
 			});
+		});
+	}
+
+	/**
+	 * 添加分类或标签按钮
+	 * @param contentEl 容器元素
+	 * @param type 类型，"category" 或 "tag"
+	 */
+	private addMetasBtn(contentEl: HTMLElement, type: string) {
+		const button = contentEl.createEl("button", {
+			text: "添加",
+			attr: {
+				style: "color: var(--text-on-accent); cursor: pointer;margin-left: 10px",
+			},
+		});
+		const fun = async () => {
+			type === "tag"
+				? this.getTags(contentEl)
+				: this.getCategories(contentEl);
+		};
+		button.addEventListener("click", async () => {
+			console.log(type);
+			new addMetas(this.app, type, fun).open();
 		});
 	}
 
