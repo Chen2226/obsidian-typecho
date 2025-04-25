@@ -79,7 +79,7 @@ export class PushModal extends Modal {
 		const button = contentEl.createEl("button", {
 			text: "发布",
 			attr: {
-				style: "margin-top: 15px; padding: 8px 16px; border: none; border-radius: 4px; color: var(--text-on-accent); cursor: pointer;",
+				style: "margin-top: 15px; padding: 8px 16px; border: none; border-radius: 4px;  color: var(--text-normal); cursor: pointer;",
 			},
 		});
 		button.addEventListener("click", async () => {
@@ -92,7 +92,7 @@ export class PushModal extends Modal {
 				const mid = [...this.selectedCategories, ...this.selectedTags];
 				const data = {
 					title: this.title,
-					text: this.content,
+					text: "<!--markdown-->" + this.content,
 					authorId: getSettings().User?.uid,
 					mid: mid.join(","),
 					slug: "obsidian-" + this.baseFileName,
@@ -156,12 +156,12 @@ export class PushModal extends Modal {
 				attr: { style: "margin-bottom: 15px;" },
 			});
 		}
-	
+
 		this.selectedCategories = [];
 		this.notice = new Notice("获取分类中...");
 		const categoriesResponse = await HttpUtils.get("/categories");
 		const categories = categoriesResponse.data || [];
-	
+
 		if (categories.length > 0) {
 			requestAnimationFrame(() => {
 				this.createCategoryCheckboxes(categories);
@@ -207,7 +207,7 @@ export class PushModal extends Modal {
 				style: "border: 1px solid var(--background-modifier-border); padding: 10px; border-radius: 5px; display: flex; flex-wrap: wrap;",
 			},
 		});
-	
+
 		// 添加标题
 		groupContainer.createEl("h4", {
 			text: "分类(可选)",
@@ -215,15 +215,15 @@ export class PushModal extends Modal {
 				style: "margin: 0 0 10px 0; font-weight: bold; color: var(--text-normal);",
 			},
 		});
-	
+
 		this.addMetasBtn(groupContainer, "category");
-	
+
 		groupContainer.createEl("span", {
 			attr: {
 				style: "width: 100%;height: 1px",
 			},
 		});
-	
+
 		// 填充复选框
 		categories.forEach((item: any) => {
 			// 每个分类项的容器
@@ -232,7 +232,7 @@ export class PushModal extends Modal {
 					style: "display: flex; align-items: center; margin: 5px 10px 5px 0; padding: 5px 10px; border-radius: 3px; color: var(--text-normal); cursor: pointer;",
 				},
 			});
-	
+
 			// 创建复选框
 			const checkbox = categoryWrapper.createEl("input", {
 				type: "checkbox",
@@ -242,7 +242,7 @@ export class PushModal extends Modal {
 					style: "margin-right: 5px; accent-color: var(--interactive-accent);",
 				},
 			});
-	
+
 			// 创建标签，并关联复选框
 			const label = categoryWrapper.createEl("label", {
 				text: item.name,
@@ -251,7 +251,7 @@ export class PushModal extends Modal {
 					style: "cursor: pointer; font-size: 14px; color: var(--text-normal);",
 				},
 			});
-	
+
 			// 监听复选框变化
 			checkbox.addEventListener("change", () => {
 				if (checkbox.checked) {
@@ -264,7 +264,7 @@ export class PushModal extends Modal {
 				}
 				console.log("当前选中的分类:", this.selectedCategories);
 			});
-	
+
 			label.addEventListener("click", (e) => {
 				checkbox.click();
 			});
@@ -283,28 +283,28 @@ export class PushModal extends Modal {
 				style: "border: 1px solid var(--background-modifier-border); padding: 10px; border-radius: 5px; display: flex; flex-wrap: wrap;",
 			},
 		});
-	
+
 		groupContainer.createEl("h4", {
 			text: "标签(可选)",
 			attr: {
 				style: "margin: 0 0 10px 0; font-weight: bold; color: var(--text-normal);",
 			},
 		});
-	
+
 		this.addMetasBtn(groupContainer, "tag");
 		groupContainer.createEl("span", {
 			attr: {
 				style: "width: 100%;height: 1px",
 			},
 		});
-	
+
 		tags.forEach((item: any) => {
 			const tagWrapper = groupContainer.createDiv({
 				attr: {
 					style: "display: flex; align-items: center; margin: 5px 10px 5px 0; padding: 5px 10px; border-radius: 3px; color: var(--text-normal); cursor: pointer;",
 				},
 			});
-	
+
 			const checkbox = tagWrapper.createEl("input", {
 				type: "checkbox",
 				value: item.mid,
@@ -313,7 +313,7 @@ export class PushModal extends Modal {
 					style: "margin-right: 5px; accent-color: var(--interactive-accent);",
 				},
 			});
-	
+
 			const label = tagWrapper.createEl("label", {
 				text: item.name,
 				attr: {
@@ -321,7 +321,7 @@ export class PushModal extends Modal {
 					style: "cursor: pointer; font-size: 14px; color: var(--text-normal);",
 				},
 			});
-	
+
 			checkbox.addEventListener("change", () => {
 				if (checkbox.checked) {
 					this.selectedTags.push(item.mid);
@@ -333,7 +333,7 @@ export class PushModal extends Modal {
 				}
 				console.log("当前选中的标签:", this.selectedTags);
 			});
-	
+
 			label.addEventListener("click", (e) => {
 				checkbox.click();
 			});
@@ -349,7 +349,7 @@ export class PushModal extends Modal {
 		const button = contentEl.createEl("button", {
 			text: "添加",
 			attr: {
-				style: "color: var(--text-on-accent); cursor: pointer;margin-left: 10px",
+				style: "cursor: pointer; margin-left: 10px; background-color: var(--interactive-normal); color: var(--text-normal);",
 			},
 		});
 		const fun = async () => {

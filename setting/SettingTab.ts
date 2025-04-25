@@ -62,7 +62,7 @@ export class SettingTab extends PluginSettingTab {
 	}
 
 	private async refreshUserList(containerEl: HTMLElement): Promise<void> {
-		let userList: string | any[] = [];
+		let userList: any[] = [];
 		if (this.settings.Host && this.settings.Token) {
 			this.initTab(containerEl);
 			await HttpUtils.get("/userList").then(async (res: any) => {
@@ -70,23 +70,28 @@ export class SettingTab extends PluginSettingTab {
 				await this.plugin.saveSettings();
 			});
 		}
-		new Setting(containerEl)
-			.setName("User")
-			.setDesc("Typecho用户,操作时使用的用户")
-			.addDropdown((dropdown) => {
-				for (let i = 0; i < userList.length; i++) {
-					dropdown.addOption(userList[i].uid, userList[i].screenName);
-				}
-				dropdown.setValue(this.settings.User.uid);
-				dropdown.onChange(async (value) => {
+		if (userList.length > 0) {
+			new Setting(containerEl)
+				.setName("User")
+				.setDesc("Typecho用户,操作时使用的用户")
+				.addDropdown((dropdown) => {
 					for (let i = 0; i < userList.length; i++) {
-						if (userList[i].uid == value) {
-							this.settings.User = userList[i];
-							await this.plugin.saveSettings();
-							break;
-						}
+						dropdown.addOption(
+							userList[i].uid,
+							userList[i].screenName
+						);
 					}
+					dropdown.setValue(this.settings.User.uid);
+					dropdown.onChange(async (value) => {
+						for (let i = 0; i < userList.length; i++) {
+							if (userList[i].uid == value) {
+								this.settings.User = userList[i];
+								await this.plugin.saveSettings();
+								break;
+							}
+						}
+					});
 				});
-			});
+		}
 	}
 }
