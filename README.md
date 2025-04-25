@@ -1,6 +1,7 @@
 # Typecho
 
 【English | [简体中文](/README_ZH.md)】
+<br>
 Synchronize files from Obsidian to Typecho
 <br>
 *Typecho-API: [Typecho Restful](https://github.com/Chen2226/typecho-plugin-Restful)*
