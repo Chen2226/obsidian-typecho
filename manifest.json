@@ -2,9 +2,8 @@
 	"id": "typecho",
 	"name": "Typecho",
 	"version": "1.0.0",
-	"minAppVersion": "1.8.0",
+	"minAppVersion": "0.15.0",
 	"description": "Synchronizing obsidian notes to typecho",
 	"author": "Chen",
-	"authorUrl": "https://github.com/Chen2226/obsidian-typecho",
 	"isDesktopOnly": false
 }

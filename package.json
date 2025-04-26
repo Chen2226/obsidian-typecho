@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-typecho",
+	"name": "typecho",
 	"version": "1.0.0",
-	"description": "obsidian笔记同步至typecho",
+	"description": "将笔记同步至typecho",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
