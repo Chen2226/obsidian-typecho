@@ -69,7 +69,7 @@ export class PushModal extends Modal {
 			const selectedFilePath = (event.target as HTMLSelectElement).value;
 			if (selectedFilePath) {
 				this.readFileAndSetContent(selectedFilePath);
-				this.setTitleFromFileName("", titleInput);
+				this.setTitleFromFileName(selectedFilePath, titleInput);
 			} else {
 				new Notice("未选择任何文件");
 			}
