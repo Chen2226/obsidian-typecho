@@ -3,7 +3,7 @@
 	"name": "Typecho",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Synchronizing obsidian notes to typecho",
+	"description": "Post the file to Typecho",
 	"author": "Chen",
 	"isDesktopOnly": false
 }
