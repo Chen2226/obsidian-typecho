@@ -2,7 +2,7 @@
 
 【[English](/README.md) | 简体中文】
 <br>
-将 obsidian 中的文件同步到 typecho 中
+把文件同步到 Typecho 中
 <br>
 *Typecho-API: [Typecho Restful](https://github.com/Chen2226/typecho-plugin-Restful)*
 
