@@ -1,6 +1,6 @@
 {
 	"name": "typecho",
-	"version": "1.0.0",
+	"version": "0.1.0",
 	"description": "将笔记同步至typecho",
 	"main": "main.js",
 	"scripts": {
@@ -20,5 +20,8 @@
 		"obsidian": "latest",
 		"tslib": "2.4.0",
 		"typescript": "4.7.4"
+	},
+	"dependencies": {
+		"i18next": "^23.16.8"
 	}
 }

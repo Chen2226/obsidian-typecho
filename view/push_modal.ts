@@ -2,7 +2,7 @@ import { App, Modal, Notice } from "obsidian";
 import { getSettings } from "../main";
 import { addMetas } from "./add_metas";
 import { HttpUtils } from "../utils/request";
-
+import i18n from "../utils/i18n";
 export class PushModal extends Modal {
 	constructor(app: App) {
 		super(app);
@@ -19,7 +19,7 @@ export class PushModal extends Modal {
 
 	async onOpen() {
 		const { contentEl } = this;
-		contentEl.createEl("h2", { text: "发布到 Typecho" });
+		contentEl.createEl("h2", { text: i18n.t("sync.title") });
 
 		await this.getCategories(contentEl);
 		await this.getTags(contentEl);
@@ -28,7 +28,7 @@ export class PushModal extends Modal {
 		const titleInput = contentEl.createEl("input", {
 			attr: {
 				type: "text",
-				placeholder: "请输入标题",
+				placeholder: `${i18n.t("common.input")} ${i18n.t("field.title")}`,
 				style: "width: 100%; margin-top: 15px; margin-bottom: 15px; border: 1px solid var(--background-modifier-border); border-radius: 4px; color: var(--text-normal);",
 			},
 		});
@@ -71,23 +71,23 @@ export class PushModal extends Modal {
 				this.readFileAndSetContent(selectedFilePath);
 				this.setTitleFromFileName(selectedFilePath, titleInput);
 			} else {
-				new Notice("未选择任何文件");
+				new Notice(i18n.t("error.noFileSelected"));
 			}
 		});
 
 		// 发布按钮
 		const button = contentEl.createEl("button", {
-			text: "发布",
+			text: i18n.t("sync.publish"),
 			attr: {
 				style: "margin-top: 15px; padding: 8px 16px; border: none; border-radius: 4px;  color: var(--text-normal); cursor: pointer;",
 			},
 		});
 		button.addEventListener("click", async () => {
 			if (this.title === "" || this.content === "") {
-				new Notice("标题或内容不能为空");
+				new Notice(i18n.t("error.titleOrContentCannotBeEmpty"));
 				return;
 			}
-			this.notice = new Notice("发布中...");
+			this.notice = new Notice(`${i18n.t("sync.publish")}...`);
 			try {
 				const mid = [...this.selectedCategories, ...this.selectedTags];
 				const data = {
@@ -100,11 +100,11 @@ export class PushModal extends Modal {
 				console.log(data);
 				const response = await HttpUtils.post("/postArticle", data);
 				if (response.status === "success") {
-					new Notice("发布成功");
+					new Notice(`${i18n.t("sync.publish")} ${i18n.t("common.success")}`);
 					this.close();
 				}
 			} catch (error) {
-				new Notice("发布失败");
+				new Notice(`${i18n.t("sync.publish")} ${i18n.t("common.failed")}`);
 				console.error("发布失败:", error);
 			}
 		});
@@ -117,7 +117,7 @@ export class PushModal extends Modal {
 	async readFileAndSetContent(path: string) {
 		const file = this.app.vault.getFileByPath(path);
 		if (!file) {
-			new Notice("读取文件异常，请检查文件内容");
+			new Notice(i18n.t("error.readFileError"));
 			return;
 		}
 		this.app.vault.cachedRead(file).then((res) => {
@@ -135,7 +135,7 @@ export class PushModal extends Modal {
 			path != "" ? path : this.activeFilePath
 		);
 		if (!file) {
-			new Notice("读取文件异常，请检查文件内容");
+			new Notice(i18n.t("error.readFileError"));
 			return;
 		}
 		this.baseFileName = file.basename;
@@ -158,7 +158,7 @@ export class PushModal extends Modal {
 		}
 
 		this.selectedCategories = [];
-		this.notice = new Notice("获取分类中...");
+		this.notice = new Notice(`${i18n.t("common.get")}${i18n.t("field.category")}...`);
 		const categoriesResponse = await HttpUtils.get("/categories");
 		const categories = categoriesResponse.data || [];
 
@@ -182,7 +182,7 @@ export class PushModal extends Modal {
 		}
 
 		this.selectedTags = [];
-		this.notice = new Notice("获取标签中...");
+		this.notice = new Notice(`${i18n.t("common.get")}${i18n.t("field.tag")}...`);
 		const tagsResponse = await HttpUtils.get("/tags");
 		const tags = tagsResponse.data || [];
 
@@ -210,7 +210,7 @@ export class PushModal extends Modal {
 
 		// 添加标题
 		groupContainer.createEl("h4", {
-			text: "分类(可选)",
+			text: i18n.t("field.category"),
 			attr: {
 				style: "margin: 0 0 10px 0; font-weight: bold; color: var(--text-normal);",
 			},
@@ -285,7 +285,7 @@ export class PushModal extends Modal {
 		});
 
 		groupContainer.createEl("h4", {
-			text: "标签(可选)",
+			text: i18n.t("field.tag"),
 			attr: {
 				style: "margin: 0 0 10px 0; font-weight: bold; color: var(--text-normal);",
 			},
@@ -347,7 +347,7 @@ export class PushModal extends Modal {
 	 */
 	private addMetasBtn(contentEl: HTMLElement, type: string) {
 		const button = contentEl.createEl("button", {
-			text: "添加",
+			text: i18n.t("common.add"),
 			attr: {
 				style: "cursor: pointer; margin-left: 10px; background-color: var(--interactive-normal); color: var(--text-normal);",
 			},

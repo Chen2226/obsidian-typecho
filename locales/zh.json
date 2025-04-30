@@ -1,0 +1,30 @@
+{
+    "common": {
+        "success": "成功",
+        "failed": "失败",
+        "add": "添加",
+        "get": "获取",
+        "empty": "不能为空",
+        "input": "请输入",
+        "enter": "（按回车添加）"
+    },
+    "sync": {
+        "title": "同步到Typecho",
+        "publish": "发布",
+        "adding": "添加中",
+        "addSuccess": "添加成功"
+    },
+    "error": {
+        "requestFailed": "请求失败，请检查网络或 API 配置",
+        "noFileSelected": "未选择文件",
+        "titleOrContentCannotBeEmpty": "标题或内容不能为空",
+        "readFileError": "读取文件错误，请检查文件内容"
+    },
+    "field": {
+        "title": "标题",
+        "tag": "标签",
+        "domainName": "域名",
+        "category": "分类",
+        "typechoUser": "Typecho 用户，操作时使用的用户"
+    }
+}

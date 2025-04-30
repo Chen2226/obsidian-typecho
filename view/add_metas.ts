@@ -1,6 +1,6 @@
 import { App, Modal, Notice } from "obsidian";
 import { HttpUtils } from "../utils/request";
-
+import i18n from "../utils/i18n";
 export class addMetas extends Modal {
 	notice: Notice;
 	type: string;
@@ -10,18 +10,21 @@ export class addMetas extends Modal {
 	constructor(app: App, type: string, fun: () => Promise<void>) {
 		super(app);
 		this.type = type; // 0: tag, 1: category
-		this.type_name = type === "tag" ? "标签" : "分类";
-        this.fun = fun;
+		this.type_name = type === "tag" ? i18n.t("field.tag") : i18n.t("field.category");
+		this.fun = fun;
 	}
 
 	async onOpen() {
 		const { contentEl } = this;
-		contentEl.createEl("h2", { text: `添加${this.type_name}` });
+		contentEl.createEl("h2", {
+			text: i18n.t("common.add") + ` ${this.type_name}`,
+		});
 
 		const titleInput = contentEl.createEl("input", {
 			attr: {
 				type: "text",
-				placeholder: `请输入${this.type_name}（按回车添加）`,
+				placeholder:
+					i18n.t("common.input") + `${this.type_name} ` + i18n.t("common.enter"),
 				style: "width: 100%; margin-top: 15px; margin-bottom: 15px; border: 1px solid var(--background-modifier-border); border-radius: 4px; color: var(--text-normal);",
 			},
 		});
@@ -33,10 +36,10 @@ export class addMetas extends Modal {
 		titleInput.addEventListener("keydown", async (event) => {
 			if (event.key === "Enter") {
 				if (this.name === "") {
-					new Notice(`${this.type_name}不能为空`);
+					new Notice(`${this.type_name}` + i18n.t("common.empty"));
 					return;
 				}
-				this.notice = new Notice("添加中...");
+				this.notice = new Notice(i18n.t("sync.adding") + "...");
 				try {
 					const data = {
 						name: this.name,
@@ -44,14 +47,12 @@ export class addMetas extends Modal {
 					};
 					const response = await HttpUtils.post("/addMetas", data);
 					if (response.status === "success") {
-						new Notice(`${this.type_name}添加成功`);
-                        await this.fun();
+						new Notice(`${this.type_name}` + i18n.t("sync.addSuccess"));
+						await this.fun();
 						this.close();
 					}
 				} catch (error) {
-					new Notice(
-						`${this.type_name}添加失败，请检查网络或 API 配置`
-					);
+					new Notice(`${this.type_name} ` + i18n.t("error.requestFailed"));
 					console.error("获取失败:", error);
 				}
 			}

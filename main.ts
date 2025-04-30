@@ -5,8 +5,9 @@ import {
 	TypechoPluginSettings,
 	DEFAULT_SETTINGS,
 } from "./setting/plugin_settings";
-
+import i18n from "./utils/i18n";
 let settings: TypechoPluginSettings;
+
 export default class TypechoPlugin extends Plugin {
 	async onload() {
 		console.log("loading plugin");
@@ -18,7 +19,7 @@ export default class TypechoPlugin extends Plugin {
 		await this.loadSettings();
 		this.addSettingTab(new settingTab(this.app, this, settings));
 
-		this.addRibbonIcon("typecho", "同步到Typecho", (evt: MouseEvent) => {
+		this.addRibbonIcon("typecho", i18n.t("sync.title"), (evt: MouseEvent) => {
 			new PushModal(this.app).open();
 		});
 	}

@@ -1,0 +1,30 @@
+{
+    "common": {
+        "success": "success",
+        "failed": "failed",
+        "add": "add",
+        "get": "get",
+        "empty": "Cannot be empty",
+        "input": "Please input",
+        "enter": "(Press Enter to add)"
+    },
+    "sync": {
+        "title": "Sync to Typecho",
+        "publish": "publish",
+        "adding": "adding",
+        "addSuccess": "add success"
+    },
+    "error": {
+        "requestFailed": "Request failed, please check the network or API configuration",
+        "noFileSelected": "No file selected",
+        "titleOrContentCannotBeEmpty": "Title or content cannot be empty",
+        "readFileError": "Read file error, please check the file content"
+    },
+    "field": {
+        "title": "title",
+        "tag": "tag",
+        "domainName": "domain name",
+        "category": "category",
+        "typechoUser": "Typecho user, the user who uses the operation"
+    }
+}

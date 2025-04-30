@@ -2,7 +2,7 @@ import plugin from "../main";
 import { App, PluginSettingTab, Setting } from "obsidian";
 import { TypechoPluginSettings } from "./plugin_settings";
 import { HttpUtils } from "../utils/request";
-
+import i18n from "../utils/i18n";
 
 export class settingTab extends PluginSettingTab {
 	plugin: plugin;
@@ -26,12 +26,10 @@ export class settingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("Host")
-			.setDesc("Typecho域名")
+			.setDesc(`Typecho${i18n.t("field.domainName")}`)
 			.addText((text) =>
 				text
-					.setPlaceholder(
-						"域名/index.php/api，或者配置了伪静态，请自行检查"
-					)
+					.setPlaceholder(`${i18n.t("field.domainName")}/index.php/api`)
 					.setValue(this.settings.Host)
 					.onChange(async (value) => {
 						this.settings.Host = value;
@@ -45,7 +43,7 @@ export class settingTab extends PluginSettingTab {
 			});
 		new Setting(containerEl)
 			.setName("Token")
-			.setDesc("插件设置的ApiToken")
+			.setDesc("ApiToken")
 			.addText((text) =>
 				text
 					.setPlaceholder("ApiToken")
@@ -74,7 +72,7 @@ export class settingTab extends PluginSettingTab {
 		if (userList.length > 0) {
 			new Setting(containerEl)
 				.setName("User")
-				.setDesc("Typecho用户,操作时使用的用户")
+				.setDesc(i18n.t("field.typechoUser"))
 				.addDropdown((dropdown) => {
 					for (let i = 0; i < userList.length; i++) {
 						dropdown.addOption(
