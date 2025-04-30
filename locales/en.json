@@ -25,6 +25,7 @@
         "tag": "tag",
         "domainName": "domain name",
         "category": "category",
-        "typechoUser": "Typecho user, the user who uses the operation"
+        "typechoUser": "Typecho user, the user who uses the operation",
+        "article": "article"
     }
 }

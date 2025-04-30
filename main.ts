@@ -1,6 +1,7 @@
 import { Plugin, addIcon } from "obsidian";
 import { settingTab } from "./setting/setting_tab";
 import { PushModal } from "./view/push_modal";
+import { ArticleView, VIEW_TYPE as ArticleViewType } from "./view/article_view";
 import {
 	TypechoPluginSettings,
 	DEFAULT_SETTINGS,
@@ -19,13 +20,21 @@ export default class TypechoPlugin extends Plugin {
 		await this.loadSettings();
 		this.addSettingTab(new settingTab(this.app, this, settings));
 
-		this.addRibbonIcon("typecho", i18n.t("sync.title"), (evt: MouseEvent) => {
-			new PushModal(this.app).open();
-		});
+		this.addRibbonIcon(
+			"typecho",
+			i18n.t("sync.title"),
+			(evt: MouseEvent) => {
+				new PushModal(this.app).open();
+			}
+		);
+
+		this.registerView(ArticleViewType, (leaf) => new ArticleView(leaf));
+		this.openPluginView();
 	}
 
 	onunload() {
 		console.log("unloading plugin");
+		this.app.workspace.getLeavesOfType(ArticleViewType);
 	}
 
 	async loadSettings() {
@@ -34,6 +43,16 @@ export default class TypechoPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(settings);
+	}
+
+	private async openPluginView() {
+		const { workspace } = this.app;
+		const newLeaf = workspace.getRightLeaf(false);
+		if (newLeaf) {
+			newLeaf.setViewState({
+				type: ArticleViewType,
+			});
+		}
 	}
 }
 

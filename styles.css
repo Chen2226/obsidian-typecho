@@ -1,8 +1,39 @@
-/*
+.tree-container {
+	font-family: sans-serif;
+	color: #ccc;
+}
+.tree-node-list {
+	list-style: none;
+	padding-left: 0;
+}
+.tree-children {
+	margin-top: 4px;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.tree-node-label {
+	font-size: 14px;
+}
 
-If your plugin does not need CSS, delete this file.
+.tree-node-wrapper {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	user-select: none;
+}
 
-*/
+.tree-file-icon {
+	margin-right: 8px;
+	font-size: 14px;
+	color: #888;
+}
+
+.tree-toggle-icon {
+	margin-right: 8px;
+	font-size: 12px;
+	user-select: none;
+	cursor: pointer;
+}
+
+.tree-node-label {
+	font-size: 14px;
+}
