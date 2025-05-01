@@ -18,7 +18,8 @@
         "requestFailed": "请求失败，请检查网络或 API 配置",
         "noFileSelected": "未选择文件",
         "titleOrContentCannotBeEmpty": "标题或内容不能为空",
-        "readFileError": "读取文件错误，请检查文件内容"
+        "readFileError": "读取文件错误，请检查文件内容",
+        "noTypechoUser": "未设置 Typecho 用户"
     },
     "field": {
         "title": "标题",

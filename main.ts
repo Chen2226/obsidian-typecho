@@ -1,7 +1,7 @@
 import { Plugin, addIcon } from "obsidian";
 import { settingTab } from "./setting/setting_tab";
 import { PushModal } from "./view/push_modal";
-import { ArticleView, VIEW_TYPE as ArticleViewType } from "./view/article_view";
+import { CategoryView, VIEW_TYPE as ArticleViewType } from "./view/categories";
 import {
 	TypechoPluginSettings,
 	DEFAULT_SETTINGS,
@@ -28,7 +28,7 @@ export default class TypechoPlugin extends Plugin {
 			}
 		);
 
-		this.registerView(ArticleViewType, (leaf) => new ArticleView(leaf));
+		this.registerView(ArticleViewType, (leaf) => new CategoryView(leaf));
 		this.openPluginView();
 	}
 
