@@ -1,6 +1,6 @@
 import { Plugin, addIcon } from "obsidian";
 import { settingTab } from "./setting/setting_tab";
-import { PushModal } from "./view/push_modal";
+import { PushModal } from "./view/push";
 import { CategoryView, VIEW_TYPE as ArticleViewType } from "./view/categories";
 import {
 	TypechoPluginSettings,

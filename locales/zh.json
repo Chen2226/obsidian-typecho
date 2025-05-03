@@ -6,7 +6,12 @@
         "get": "获取",
         "empty": "不能为空",
         "input": "请输入",
-        "enter": "（按回车添加）"
+        "enter": "（按回车添加）",
+        "loading": "加载中...",
+        "previousPage": "上一页",
+        "nextPage": "下一页",
+        "noDataFound": "没有找到数据",
+        "errorOccurred": "发生错误"
     },
     "sync": {
         "title": "同步到Typecho",
@@ -19,7 +24,9 @@
         "noFileSelected": "未选择文件",
         "titleOrContentCannotBeEmpty": "标题或内容不能为空",
         "readFileError": "读取文件错误，请检查文件内容",
-        "noTypechoUser": "未设置 Typecho 用户"
+        "noTypechoUser": "未设置 Typecho 用户",
+        "failedToFetchArticles": "获取文章列表失败",
+        "failedToFetchPostDetails": "获取文章详情失败"
     },
     "field": {
         "title": "标题",

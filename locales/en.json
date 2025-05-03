@@ -6,7 +6,12 @@
         "get": "get",
         "empty": "Cannot be empty",
         "input": "Please input",
-        "enter": "(Press Enter to add)"
+        "enter": "(Press Enter to add)",
+        "loading": "Loading...",
+        "previousPage": "Previous Page",
+        "nextPage": "Next Page",
+        "noDataFound": "No data found",
+        "errorOccurred": "An error occurred"
     },
     "sync": {
         "title": "Sync to Typecho",
@@ -19,7 +24,9 @@
         "noFileSelected": "No file selected",
         "titleOrContentCannotBeEmpty": "Title or content cannot be empty",
         "readFileError": "Read file error, please check the file content",
-        "noTypechoUser": "No Typecho user, please input the user who uses the operation"
+        "noTypechoUser": "No Typecho user, please input the user who uses the operation",
+        "failedToFetchArticles": "Failed to fetch articles",
+        "failedToFetchPostDetails": "Failed to fetch post details"
     },
     "field": {
         "title": "title",

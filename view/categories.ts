@@ -4,9 +4,9 @@ import i18n from "../utils/i18n";
 import { getSettings } from "../main";
 import { HttpUtils } from "../utils/request";
 import { Util } from "../utils/util";
+import { BrowseArticles } from "./browse_articles";
 
 const VIEW_TYPE = "category-view";
-
 class CategoryView extends ItemView {
 	getViewType(): string {
 		return VIEW_TYPE;
@@ -112,7 +112,7 @@ class CategoryView extends ItemView {
 			linkIcon.addEventListener("click", (e) => {
 				e.stopPropagation();
 				window.open(node.url);
-			})
+			});
 			// 显示节点标签
 			wrapper.createEl("span", {
 				text: node.name,
@@ -127,9 +127,8 @@ class CategoryView extends ItemView {
 				setIcon(articleIcon, "newspaper");
 
 				articleIcon.addEventListener("click", (e) => {
-					console.log(e)
-					console.log(node)
-				})
+					new BrowseArticles(this.app, node).open();
+				});
 			}
 
 			// 初始展开

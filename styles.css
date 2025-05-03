@@ -109,3 +109,132 @@
 	background: #333;
 	border-left: 1px dashed #444;
 }
+
+.browse-articles-modal {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.browse-articles-modal .browse-article-item {
+	padding: 1rem;
+	border-bottom: 1px solid var(--background-modifier-border);
+	transition: background-color 0.2s;
+}
+
+.browse-articles-modal .browse-article-item:hover {
+	background-color: var(--background-secondary);
+}
+
+.browse-articles-modal .article-title {
+	font-size: 1.1rem;
+	margin-bottom: 0.5rem;
+}
+
+.browse-articles-modal .article-title .download-icon {
+	margin-left: 1rem;
+	font-size: 0.9rem;
+	color: var(--text-muted);
+	cursor: pointer;
+}
+
+.browse-articles-modal .article-title a {
+	color: var(--text-link);
+	text-decoration: none;
+}
+
+.browse-articles-modal .article-date {
+	color: var(--text-muted);
+	font-size: 0.9em;
+}
+
+.browse-articles-modal .pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 1.5rem;
+	gap: 1rem;
+}
+
+.browse-articles-modal .pagination button {
+	padding: 0.4rem 0.8rem;
+	border-radius: var(--radius);
+	border: 1px solid var(--background-modifier-border);
+	background-color: var(--background-primary);
+	color: var(--text-normal);
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.browse-articles-modal .pagination button:hover:not(:disabled) {
+	background-color: var(--interactive-accent);
+	color: var(--background-primary);
+	border-color: var(--interactive-accent);
+}
+
+.browse-articles-modal .pagination button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.browse-articles-modal .no-articles {
+	padding: 2rem;
+	text-align: center;
+	color: var(--text-muted);
+}
+
+.preview-popup {
+    position: absolute;
+    background-color: var(--background-secondary);
+    color: var(--text-normal);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    font-size: 0.9em;
+    max-width: 300px;
+    word-break: break-word;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.preview-popup::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 16px;
+    border-width: 0 6px 6px 6px;
+    border-style: solid;
+    border-color: transparent transparent var(--background-secondary) transparent;
+}
+
+.article-preview-modal {
+    max-width: 80vw;
+    max-height: 80vh;
+    overflow: auto;
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* 初始状态：透明 + 缩小 */
+.article-preview-modal.fade-enter {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+/* 进入动画激活态 */
+.article-preview-modal.fade-enter-active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 退出动画激活态 */
+.article-preview-modal.fade-exit {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.article-preview-modal.fade-exit-active {
+    opacity: 0;
+    transform: scale(0.95);
+}
