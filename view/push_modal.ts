@@ -89,6 +89,9 @@ export class PushModal extends Modal {
 			}
 			this.notice = new Notice(`${i18n.t("sync.publish")}...`);
 			try {
+				// 获取csrfToken
+				const token = await HttpUtils.get("/getCsrfToken?key="+this.title);
+
 				const mid = [...this.selectedCategories, ...this.selectedTags];
 				const data = {
 					title: this.title,
@@ -96,6 +99,7 @@ export class PushModal extends Modal {
 					authorId: getSettings().User?.uid,
 					mid: mid.join(","),
 					slug: "obsidian-" + this.baseFileName,
+					token: token.data.csrfToken,
 				};
 				console.log(data);
 				const response = await HttpUtils.post("/postArticle", data);
