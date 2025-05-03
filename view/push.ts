@@ -28,7 +28,9 @@ export class PushModal extends Modal {
 		const titleInput = contentEl.createEl("input", {
 			attr: {
 				type: "text",
-				placeholder: `${i18n.t("common.input")} ${i18n.t("field.title")}`,
+				placeholder: `${i18n.t("common.input")} ${i18n.t(
+					"field.title"
+				)}`,
 				style: "width: 100%; margin-top: 15px; margin-bottom: 15px; border: 1px solid var(--background-modifier-border); border-radius: 4px; color: var(--text-normal);",
 			},
 		});
@@ -89,6 +91,10 @@ export class PushModal extends Modal {
 			}
 			this.notice = new Notice(`${i18n.t("sync.publish")}...`);
 			try {
+				// 获取csrfToken
+				const token = await HttpUtils.get(
+					"/getCsrfToken?key=" + this.title
+				);
 				const mid = [...this.selectedCategories, ...this.selectedTags];
 				const data = {
 					title: this.title,
@@ -96,15 +102,20 @@ export class PushModal extends Modal {
 					authorId: getSettings().User?.uid,
 					mid: mid.join(","),
 					slug: "obsidian-" + this.baseFileName,
+					token: token.data.csrfToken,
 				};
 				console.log(data);
 				const response = await HttpUtils.post("/postArticle", data);
 				if (response.status === "success") {
-					new Notice(`${i18n.t("sync.publish")} ${i18n.t("common.success")}`);
+					new Notice(
+						`${i18n.t("sync.publish")} ${i18n.t("common.success")}`
+					);
 					this.close();
 				}
 			} catch (error) {
-				new Notice(`${i18n.t("sync.publish")} ${i18n.t("common.failed")}`);
+				new Notice(
+					`${i18n.t("sync.publish")} ${i18n.t("common.failed")}`
+				);
 				console.error("发布失败:", error);
 			}
 		});
@@ -158,7 +169,9 @@ export class PushModal extends Modal {
 		}
 
 		this.selectedCategories = [];
-		this.notice = new Notice(`${i18n.t("common.get")}${i18n.t("field.category")}...`);
+		this.notice = new Notice(
+			`${i18n.t("common.get")}${i18n.t("field.category")}...`
+		);
 		const categoriesResponse = await HttpUtils.get("/categories");
 		const categories = categoriesResponse.data || [];
 
@@ -182,7 +195,9 @@ export class PushModal extends Modal {
 		}
 
 		this.selectedTags = [];
-		this.notice = new Notice(`${i18n.t("common.get")}${i18n.t("field.tag")}...`);
+		this.notice = new Notice(
+			`${i18n.t("common.get")}${i18n.t("field.tag")}...`
+		);
 		const tagsResponse = await HttpUtils.get("/tags");
 		const tags = tagsResponse.data || [];
 
