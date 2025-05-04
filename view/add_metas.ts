@@ -44,14 +44,9 @@ export class addMetas extends Modal {
 				}
 				this.notice = new Notice(i18n.t("sync.adding") + "...");
 				try {
-					// 获取csrfToken
-					const token = await HttpUtils.get(
-						"/getCsrfToken?key=" + this.name
-					);
 					const data = {
 						name: this.name,
-						type: this.type,
-						token: token.data.csrfToken
+						type: this.type
 					};
 
 					const response = await HttpUtils.post("/addMetas", data);
