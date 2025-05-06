@@ -1,6 +1,6 @@
 # Typecho
 
-【[English](/README.md) | 简体中文】
+【[English](/README.md) | 中文】
 <br>
 把文件同步到 Typecho 中
 <br>

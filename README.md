@@ -1,6 +1,6 @@
 # Typecho
 
-[[English](/README.md) | Simplified Chinese]
+[ English | [Chinese](/README_ZH.md) ]
 <br>
 Synchronize Files to Typecho
 <br>
