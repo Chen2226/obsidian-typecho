@@ -3,6 +3,7 @@ import { getSettings } from "../main";
 import { addMetas } from "./add_metasl";
 import { HttpUtils } from "../utils/request";
 import i18n from "../utils/i18n";
+import { Util } from "../utils/util";
 export class PushModal extends Modal {
 	constructor(app: App) {
 		super(app);
@@ -91,20 +92,15 @@ export class PushModal extends Modal {
 			}
 			this.notice = new Notice(`${i18n.t("sync.publish")}...`);
 			try {
-				// 获取csrfToken
-				const token = await HttpUtils.get(
-					"/getCsrfToken?key=" + this.title
-				);
 				const mid = [...this.selectedCategories, ...this.selectedTags];
+
 				const data = {
 					title: this.title,
 					text: "<!--markdown-->" + this.content,
 					authorId: getSettings().User?.uid,
 					mid: mid.join(","),
-					slug: "obsidian-" + this.baseFileName,
-					token: token.data.csrfToken,
+					slug: "obsidian-" + Util.hash.simpleHash(this.baseFileName),
 				};
-				console.log(data);
 				const response = await HttpUtils.post("/postArticle", data);
 				if (response.status === "success") {
 					new Notice(
@@ -277,7 +273,6 @@ export class PushModal extends Modal {
 						this.selectedCategories.splice(index, 1); // 从选中列表移除
 					}
 				}
-				console.log("当前选中的分类:", this.selectedCategories);
 			});
 
 			label.addEventListener("click", (e) => {
@@ -346,7 +341,6 @@ export class PushModal extends Modal {
 						this.selectedTags.splice(index, 1);
 					}
 				}
-				console.log("当前选中的标签:", this.selectedTags);
 			});
 
 			label.addEventListener("click", (e) => {
@@ -373,7 +367,6 @@ export class PushModal extends Modal {
 				: this.getCategories(contentEl);
 		};
 		button.addEventListener("click", async () => {
-			console.log(type);
 			new addMetas(this.app, type, fun).open();
 		});
 	}

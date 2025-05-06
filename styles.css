@@ -1,234 +1,234 @@
+/* 基础容器样式 */
 .tree-container {
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-		sans-serif;
-	color: #e0e0e0;
-	padding: 8px;
+    color: #e0e0e0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: 8px;
 }
 
-.tree-node-list {
-	list-style: none;
-	padding-left: 0;
-	margin: 0;
-}
-
-.tree-node-item {
-	position: relative;
-	margin-bottom: 4px;
-}
-
-.tree-children {
-	margin-top: 4px;
-	transition: all 0.2s ease-in-out;
-}
-
-.tree-node-wrapper {
-	display: flex;
-	align-items: center;
-	cursor: pointer;
-	user-select: none;
-	padding: 6px 8px;
-	border-radius: 6px;
-	transition: background-color 0.2s ease-in-out;
-}
-
-.tree-node-wrapper:hover {
-	background-color: #2a2a2a;
-}
-
-.tree-toggle-icon {
-	margin-right: 8px;
-	font-size: 12px;
-	color: #888;
-	transition: transform 0.2s ease-in-out;
-	cursor: pointer;
-}
-
-.tree-toggle-icon.expanded {
-	transform: rotate(90deg);
-	color: #bbb;
-}
-
-.tree-article-icon {
-	margin-right: 6px;
-	color: #66afee;
-	font-size: 14px;
-	transition: color 0.2s ease-in-out;
-}
-
-.tree-node-wrapper:hover .tree-article-icon {
-	color: #88caff;
-}
-
-.tree-link-icon {
-	margin-right: 6px;
-	color: #3c9cf0;
-	font-size: 14px;
-	transition: color 0.2s ease-in-out;
-}
-
-.tree-node-wrapper:hover .tree-link-icon {
-	color: #008cff;
-}
-
-.tree-node-label {
-	font-size: 14px;
-	flex: 1;
-	transition: color 0.2s ease-in-out;
-}
-
-.tree-indent {
-	position: absolute;
-	left: 0;
-	top: 50%;
-	transform: translateY(-50%);
-	width: 16px;
-	height: 16px;
-}
-
-.tree-indent::before {
-	content: "";
-	position: absolute;
-	bottom: 0;
-	left: 8px;
-	width: 1px;
-	background: #444;
+/* 树形结构基础样式 */
+.tree-node-list,
+.tree-container ul.tree-node-list {
+    list-style: none;
+    list-style-type: none;
+    margin: 0;
+    padding-left: 0;
 }
 
 .tree-node-list ul {
-	padding-left: 16px;
-	position: relative;
+    padding-left: 16px;
+    position: relative;
 }
 
 .tree-node-list ul::before {
-	content: "";
-	position: absolute;
-	top: 0;
-	left: 8px;
-	bottom: 0;
-	width: 1px;
-	background: #333;
-	border-left: 1px dashed #444;
+    background: #333;
+    border-left: 1px dashed #444;
+    bottom: 0;
+    content: "";
+    left: 8px;
+    position: absolute;
+    top: 0;
+    width: 1px;
 }
 
+.tree-node-item {
+    margin-bottom: 4px;
+    position: relative;
+}
+
+.tree-children {
+    margin-top: 4px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* 树节点包装器样式 */
+.tree-node-wrapper {
+    align-items: center;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    padding: 6px 8px;
+    transition: background-color 0.2s ease-in-out;
+    user-select: none;
+}
+
+.tree-node-wrapper:hover {
+    background-color: #2a2a2a;
+}
+
+/* 树形图标样式 */
+.tree-toggle-icon {
+    color: #888;
+    cursor: pointer;
+    font-size: 12px;
+    margin-right: 8px;
+    transition: transform 0.2s ease-in-out;
+    user-select: none;
+}
+
+.tree-toggle-icon.expanded {
+    color: #bbb;
+    transform: rotate(90deg);
+}
+
+.tree-article-icon,
+.tree-link-icon {
+    font-size: 14px;
+    margin-right: 6px;
+    transition: color 0.2s ease-in-out;
+}
+
+.tree-article-icon {
+    color: #66afee;
+}
+
+.tree-link-icon {
+    color: #3c9cf0;
+}
+
+.tree-node-wrapper:hover .tree-article-icon {
+    color: #88caff;
+}
+
+.tree-node-wrapper:hover .tree-link-icon {
+    color: #008cff;
+}
+
+.tree-node-label {
+    flex: 1;
+    font-size: 14px;
+    transition: color 0.2s ease-in-out;
+}
+
+/* 图标样式 */
+.tree-link-icon svg,
+.tree-article-icon.inline-icon svg {
+    cursor: pointer;
+    height: 12px;
+    margin-left: 4px;
+    vertical-align: middle;
+    width: 12px;
+}
+
+/* 文章浏览模态框样式 */
 .browse-articles-modal {
-	max-width: 800px;
-	margin: 0 auto;
+    margin: 0 auto;
+    max-width: 800px;
 }
 
 .browse-articles-modal .browse-article-item {
-	padding: 1rem;
-	border-bottom: 1px solid var(--background-modifier-border);
-	transition: background-color 0.2s;
+    border-bottom: 1px solid var(--background-modifier-border);
+    padding: 1rem;
+    transition: background-color 0.2s;
 }
 
 .browse-articles-modal .browse-article-item:hover {
-	background-color: var(--background-secondary);
+    background-color: var(--background-secondary);
 }
 
 .browse-articles-modal .article-title {
-	font-size: 1.1rem;
-	margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
 }
 
 .browse-articles-modal .article-title .download-icon {
-	margin-left: 1rem;
-	font-size: 0.9rem;
-	color: var(--text-muted);
-	cursor: pointer;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-left: 1rem;
 }
 
 .browse-articles-modal .article-title a {
-	color: var(--text-link);
-	text-decoration: none;
+    color: var(--text-link);
+    text-decoration: none;
 }
 
 .browse-articles-modal .article-date {
-	color: var(--text-muted);
-	font-size: 0.9em;
+    color: var(--text-muted);
+    font-size: 0.9em;
 }
 
+/* 分页样式 */
 .browse-articles-modal .pagination {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin-top: 1.5rem;
-	gap: 1rem;
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
 }
 
 .browse-articles-modal .pagination button {
-	padding: 0.4rem 0.8rem;
-	border-radius: var(--radius);
-	border: 1px solid var(--background-modifier-border);
-	background-color: var(--background-primary);
-	color: var(--text-normal);
-	cursor: pointer;
-	transition: all 0.2s;
+    background-color: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: var(--radius);
+    color: var(--text-normal);
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    transition: all 0.2s;
 }
 
 .browse-articles-modal .pagination button:hover:not(:disabled) {
-	background-color: var(--interactive-accent);
-	color: var(--background-primary);
-	border-color: var(--interactive-accent);
+    background-color: var(--interactive-accent);
+    border-color: var(--interactive-accent);
+    color: var(--background-primary);
 }
 
 .browse-articles-modal .pagination button:disabled {
-	opacity: 0.5;
-	cursor: not-allowed;
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 .browse-articles-modal .no-articles {
-	padding: 2rem;
-	text-align: center;
-	color: var(--text-muted);
+    color: var(--text-muted);
+    padding: 2rem;
+    text-align: center;
 }
 
+/* 预览弹窗样式 */
 .preview-popup {
-    position: absolute;
     background-color: var(--background-secondary);
-    color: var(--text-normal);
     border: 1px solid var(--background-modifier-border);
     border-radius: var(--radius);
-    padding: 0.75rem 1rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 9999;
+    color: var(--text-normal);
     font-size: 0.9em;
     max-width: 300px;
-    word-break: break-word;
+    padding: 0.75rem 1rem;
+    position: absolute;
     transition: opacity 0.2s ease-in-out;
+    word-break: break-word;
+    z-index: 9999;
 }
 
 .preview-popup::after {
+    border-color: transparent transparent var(--background-secondary) transparent;
+    border-style: solid;
+    border-width: 0 6px 6px 6px;
     content: "";
+    left: 16px;
     position: absolute;
     top: -6px;
-    left: 16px;
-    border-width: 0 6px 6px 6px;
-    border-style: solid;
-    border-color: transparent transparent var(--background-secondary) transparent;
 }
 
+/* 文章预览模态框样式 */
 .article-preview-modal {
-    max-width: 80vw;
     max-height: 80vh;
-    overflow: auto;
+    max-width: 80vw;
     opacity: 1;
+    overflow: auto;
     transform: scale(1);
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* 初始状态：透明 + 缩小 */
 .article-preview-modal.fade-enter {
     opacity: 0;
     transform: scale(0.95);
 }
 
-/* 进入动画激活态 */
 .article-preview-modal.fade-enter-active {
     opacity: 1;
     transform: scale(1);
 }
 
-/* 退出动画激活态 */
 .article-preview-modal.fade-exit {
     opacity: 1;
     transform: scale(1);
@@ -237,4 +237,31 @@
 .article-preview-modal.fade-exit-active {
     opacity: 0;
     transform: scale(0.95);
+}
+
+/* 标签容器样式 */
+.tab-container {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.tab-container .selected {
+    background: var(--background-modifier-hover);
+}
+
+.tab-span {
+    background: var(--background-secondary);
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.tab-span:hover {
+    background: var(--background-modifier-hover);
+}
+
+.tab-span.active {
+    background: var(--background-modifier-active);
 }

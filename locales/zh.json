@@ -34,6 +34,7 @@
         "domainName": "域名",
         "category": "分类",
         "typechoUser": "Typecho 用户，操作时使用的用户",
-        "article": "文章"
+        "article": "文章",
+        "allArticle": "全部文章"
     }
 }

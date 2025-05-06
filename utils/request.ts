@@ -65,13 +65,10 @@ export class HttpUtils {
 			headers: headers || {},
 			body: body ? JSON.stringify(body) : undefined,
 		};
-
-		console.log(requestOptions);
 		try {
 			const response: RequestUrlResponse = await requestUrl(
 				requestOptions
 			);
-			console.log(response.json);
 			const res: ResponseType = response.json;
 			if (res.status === "success") {
 				return res;

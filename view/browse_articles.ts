@@ -8,10 +8,12 @@ export class BrowseArticles extends Modal {
 	currentPage = 1;
 	totalPages = 1;
 	contentContainer: HTMLElement;
+	type: string;
 
-	constructor(app: App, data: any) {
+	constructor(app: App, data: any,type: string) {
 		super(app);
 		this.data = data;
+		this.type = type;
 		this.modalEl.addClass("browse-articles-modal");
 	}
 
@@ -41,8 +43,8 @@ export class BrowseArticles extends Modal {
 			const params = {
 				page: page.toString(),
 				pageSize: "10",
-				filterType: "category",
-				filterSlug: this.data.slug,
+				filterType: this.type ?? '',
+				filterSlug: this.data.slug ?? '',
 			};
 
 			let url = "/posts?";
@@ -89,12 +91,28 @@ export class BrowseArticles extends Modal {
 						// 保存本地根目录
 						const rootPath = this.app.vault.getRoot().path;
 						const fileName = `${post.title}.md`;
-						const filePath = `${rootPath}/${fileName}`;
-						this.app.vault.create(filePath, content)
-							.then(() => {
-								console.log('ok') 
-								// this.app.workspace.openLinkText(filePath, "");
-							});
+						const filePath = `${rootPath}${fileName}`;
+
+						let file = this.app.vault.getFileByPath(fileName);
+						if (file) {
+							await this.app.vault.modify(file, content);
+						} else {
+							await this.app.vault
+								.create(filePath, content)
+								.then((newfile) => {
+									file = newfile;
+								});
+						}
+
+						// 打开窗口浏览文件
+						if (file) {
+							this.app.workspace.openLinkText(
+								file.path,
+								"",
+								true
+							);
+						}
+						this.close();
 					});
 
 					// 点击预览内容

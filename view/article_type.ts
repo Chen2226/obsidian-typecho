@@ -6,7 +6,8 @@ import { HttpUtils } from "../utils/request";
 import { Util } from "../utils/util";
 import { BrowseArticles } from "./browse_articles";
 
-const VIEW_TYPE = "category-view";
+const VIEW_TYPE = "article-view";
+
 class CategoryView extends ItemView {
 	getViewType(): string {
 		return VIEW_TYPE;
@@ -24,46 +25,98 @@ class CategoryView extends ItemView {
 		const container = this.containerEl.children[1];
 		container.empty();
 
-		// 标题
-		container.createEl("h4", { text: i18n.t("field.category") });
+		// 创建选项卡导航
+		const tabContainer = container.createDiv({ cls: "tab-container" });
+		const tabs = [
+			{ key: "all", label: i18n.t("field.allArticle") },
+			{ key: "category", label: i18n.t("field.category") },
+			{ key: "tag", label: i18n.t("field.tag") },
+		];
+		// 初始化加载第一个 tab
+		this.currentTab = "category";
 
-		const refreshButton = container.createEl("button", {
+		tabs.forEach((tab) => {
+			const tabEl = tabContainer.createEl("span", {
+				text: tab.label,
+				cls:
+					"tab-span " +
+					(tab.key === this.currentTab ? "selected" : ""),
+			});
+			tabEl.addEventListener("click", () => {
+				if (tab.key == "all") {
+					new BrowseArticles(
+						this.app,
+						{ name: i18n.t("field.allArticle") },
+						'all'
+					).open();
+					return;
+				}
+				this.switchTab(tab.key, tabContainer, tabEl);
+			});
+		});
+
+		// 内容容器
+		this.contentContainer = container.createDiv({ cls: "tab-content" });
+
+		// 刷新按钮
+		const refreshButton = tabContainer.createEl("button", {
 			cls: "refresh-button",
 		});
 		setIcon(refreshButton, "rotate-ccw");
 		refreshButton.addEventListener("click", () => {
-			this.initCategory(container);
+			this.loadData(this.currentTab, this.contentContainer);
 		});
 
-		this.initCategory(container);
+		this.loadData("category", this.contentContainer);
 	}
 
-	async initCategory(container: Element) {
-		for (let i = 0; i < container.children.length; i++) {
-			if (i != 0 && i != 1) {
-				container.children[i].remove();
-			}
-		}
+	switchTab(tabKey: string, tabContainer: HTMLElement, tabEl: HTMLElement) {
+		const selectedTabs =
+			tabContainer.querySelectorAll(".tab-span.selected");
+		selectedTabs.forEach((tab: HTMLElement) => {
+			tab.classList.remove("selected");
+		});
+		tabEl.classList.add("selected");
+		this.currentTab = tabKey;
+		this.contentContainer.empty();
+		this.loadData(tabKey, this.contentContainer);
+	}
 
-		// 校验是否选择操作用户
+	currentTab: string;
+	contentContainer: HTMLElement;
+
+	async loadData(tabKey: string, container: Element) {
+		container.empty();
+
 		if (!getSettings().User) {
 			container.createEl("p", {
 				text: i18n.t("error.noTypechoUser"),
 			});
-		} else {
+			return;
+		}
+
+		let data: any[] = [];
+
+		if (tabKey === "category") {
 			const response = await HttpUtils.get("/categories", {});
-			const data = Util.treeUtil.generateTreeData(
+			data = Util.treeUtil.generateTreeData(
 				response.data,
 				"mid",
 				"parent"
 			);
-			// 渲染树结构
-			const treeContainer = container.createDiv({
-				cls: "tree-container",
-			});
-			this.renderTree(treeContainer, data);
+		} else if (tabKey === "tag") {
+			const response = await HttpUtils.get("/tags", {});
+			data = Util.treeUtil.generateTreeData(
+				response.data,
+				"mid",
+				"parent"
+			);
 		}
+
+		const treeContainer = container.createDiv({ cls: "tree-container" });
+		this.renderTree(treeContainer, data);
 	}
+
 	renderTree(container: Element, nodes: any[], depth = 0) {
 		const ul = container.createEl("ul", { cls: "tree-node-list" });
 
@@ -71,11 +124,9 @@ class CategoryView extends ItemView {
 			const li = ul.createEl("li");
 			const wrapper = li.createDiv({ cls: "tree-node-wrapper" });
 
-			// 缩进
 			const indent = wrapper.createSpan({ cls: "tree-indent" });
 			indent.style.paddingLeft = `${depth * 16}px`;
 
-			// 判断并添加展开/折叠图标
 			if (node.children && node.children.length > 0) {
 				const toggleIcon = wrapper.createEl("span", {
 					text: node.isExpanded ? "▼" : "▶",
@@ -105,21 +156,11 @@ class CategoryView extends ItemView {
 				});
 			}
 
-			const linkIcon = wrapper.createEl("span", {
-				cls: "tree-link-icon",
-			});
-			setIcon(linkIcon, "link");
-			linkIcon.addEventListener("click", (e) => {
-				e.stopPropagation();
-				window.open(node.url);
-			});
-			// 显示节点标签
 			wrapper.createEl("span", {
 				text: node.name,
 				cls: "tree-node-label",
 			});
 
-			// 判断并添加文件图标（仅当 count > 0）
 			if (node.count && node.count > 0) {
 				const articleIcon = wrapper.createEl("span", {
 					cls: "tree-article-icon",
@@ -127,11 +168,11 @@ class CategoryView extends ItemView {
 				setIcon(articleIcon, "newspaper");
 
 				articleIcon.addEventListener("click", (e) => {
-					new BrowseArticles(this.app, node).open();
+					e.stopPropagation();
+					new BrowseArticles(this.app, node, this.currentTab).open();
 				});
 			}
 
-			// 初始展开
 			if (node.children && node.children.length > 0 && node.isExpanded) {
 				const childContainer = li.createEl("div", {
 					cls: "tree-children",

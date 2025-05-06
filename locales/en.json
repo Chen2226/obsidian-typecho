@@ -34,6 +34,7 @@
         "domainName": "domain name",
         "category": "category",
         "typechoUser": "Typecho user, the user who uses the operation",
-        "article": "article"
+        "article": "article",
+        "allArticle": "all article"
     }
 }
