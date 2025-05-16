@@ -31,9 +31,7 @@ export default class TypechoPlugin extends Plugin {
 		this.openPluginView();
 	}
 
-	onunload() {
-		this.app.workspace.getLeavesOfType(ArticleViewType);
-	}
+	onunload() {}
 
 	async loadSettings() {
 		settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
