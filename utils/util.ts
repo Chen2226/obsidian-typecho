@@ -95,4 +95,10 @@ export const Util = {
 			return (hash >>> 0).toString(16).padStart(8, "0").slice(-6);
 		},
 	},
+	file: {
+		// 将file转换成Uint8Array
+		async fileToUint8Array(file: File): Promise<Uint8Array> {
+			return new Uint8Array(await file.arrayBuffer());
+		},
+	}
 };

@@ -26,15 +26,36 @@
         "readFileError": "读取文件错误，请检查文件内容",
         "noTypechoUser": "未设置 Typecho 用户",
         "failedToFetchArticles": "获取文章列表失败",
-        "failedToFetchPostDetails": "获取文章详情失败"
+        "failedToFetchPostDetails": "获取文章详情失败",
+        "noFiles": "没有找到文件"
     },
     "field": {
         "title": "标题",
         "tag": "标签",
+        "file": "文件",
         "domainName": "域名",
         "category": "分类",
         "typechoUser": "Typecho 用户，操作时使用的用户",
         "article": "文章",
         "allArticle": "全部文章"
+    },
+    "file": {
+        "uploadFile": "上传文件",
+        "deleteFile": "删除文件",
+        "copyUrl": "复制URL到剪贴板",
+        "uploadingFile": "文件上传中...",
+        "uploadSuccess": "文件上传成功",
+        "uploadFailed": "文件上传失败",
+        "uploadError": "文件上传出错",
+        "deleteSuccess": "文件删除成功",
+        "deleteFailed": "文件删除失败",
+        "deleteError": "文件删除出错",
+        "deleteConfirm": "确定要删除文件 {fileName} 吗？",
+        "copySuccess": "已复制 {fileName} 的URL到剪贴板",
+        "copyFailed": "复制失败：URL为空",
+        "itemsPerPage": "每页显示",
+        "fileType": "类型",
+        "fileSize": "大小",
+        "fileTime": "时间"
     }
 }

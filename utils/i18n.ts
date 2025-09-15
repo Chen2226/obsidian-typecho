@@ -11,7 +11,9 @@ i18next.init({
 	fallbackLng: "en",
 	resources,
 	interpolation: {
-		escapeValue: false
+		escapeValue: false,
+		prefix: "{",
+		suffix: "}",
 	},
 	keySeparator: "."
 });

@@ -31,10 +31,30 @@
     "field": {
         "title": "title",
         "tag": "tag",
+        "file": "file",
         "domainName": "domain name",
         "category": "category",
         "typechoUser": "Typecho user, the user who uses the operation",
         "article": "article",
         "allArticle": "all article"
+    },
+    "file": {
+        "uploadFile": "Upload File",
+        "deleteFile": "Delete File",
+        "copyUrl": "Copy URL to Clipboard",
+        "uploadingFile": "Uploading file...",
+        "uploadSuccess": "File uploaded successfully",
+        "uploadFailed": "File upload failed",
+        "uploadError": "Error occurred during file upload",
+        "deleteSuccess": "File deleted successfully",
+        "deleteFailed": "File deletion failed",
+        "deleteError": "Error occurred during file deletion",
+        "deleteConfirm": "Are you sure you want to delete the file {fileName}?",
+        "copySuccess": "URL for {fileName} has been copied to clipboard",
+        "copyFailed": "Copy failed: URL is empty",
+        "itemsPerPage": "Items per page",
+        "fileType": "Type",
+        "fileSize": "Size",
+        "fileTime": "Time"
     }
 }

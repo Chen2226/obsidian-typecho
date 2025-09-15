@@ -29,7 +29,7 @@ export class HttpUtils {
 	/**
 	 * 发起 POST 请求
 	 * @param url 请求的 URL
-	 * @param body 请求体（可以是字符串或对象）
+	 * @param body 请求体（可以是字符串、对象或FormData）
 	 * @param headers 自定义请求头（可选）
 	 * @returns 返回响应数据
 	 */
@@ -53,17 +53,18 @@ export class HttpUtils {
 		method: string,
 		url: string,
 		body?: any,
-		headers?: Record<string, string>
+		headers?: Record<string, string>,
 	): Promise<ResponseType> {
 		headers = {
-			...headers,
 			...this.getHeaders(),
+			...headers,
 		};
+
 		const requestOptions = {
 			method: method,
 			url: this.getHost() + url,
 			headers: headers || {},
-			body: body ? JSON.stringify(body) : undefined,
+			body: JSON.stringify(body),
 		};
 		try {
 			const response: RequestUrlResponse = await requestUrl(
