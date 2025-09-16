@@ -1,6 +1,6 @@
 {
 	"name": "typecho",
-	"version": "0.1.0",
+	"version": "0.1.2",
 	"description": "将笔记同步至typecho",
 	"main": "main.js",
 	"scripts": {
