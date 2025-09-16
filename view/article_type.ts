@@ -51,7 +51,7 @@ class ImageModal extends Modal {
 		// 创建图片元素
 		const img = imageContainer.createEl("img", {
 			cls: "image-preview-img",
-			attr: { src: this.file.url.trim() },
+			attr: { src: this.file.url },
 		});
 	}
 
@@ -200,35 +200,35 @@ class CategoryView extends ItemView {
 		const uploadContainer = container.createDiv({
 			cls: "upload-container",
 		});
-		
+
 		// 创建分页设置区域
 		const pageSizeContainer = uploadContainer.createDiv({
 			cls: "page-size-container",
 		});
-		
+
 		// 添加分页大小标签
 		pageSizeContainer.createEl("span", {
 			text: i18n.t("file.itemsPerPage") + ": ",
 			cls: "page-size-label",
 		});
-		
+
 		// 创建分页大小选择器
 		const pageSizeSelect = pageSizeContainer.createEl("select", {
 			cls: "page-size-select",
 		});
-		
+
 		// 添加选项
-		[10, 15, 20, 30, 50].forEach(size => {
+		[10, 15, 20, 30, 50].forEach((size) => {
 			const option = pageSizeSelect.createEl("option", {
 				text: size.toString(),
 				value: size.toString(),
 			});
-			
+
 			if (size === this.pageSize) {
 				option.selected = true;
 			}
 		});
-		
+
 		// 添加选择事件
 		pageSizeSelect.addEventListener("change", () => {
 			this.pageSize = parseInt(pageSizeSelect.value);
@@ -260,6 +260,11 @@ class CategoryView extends ItemView {
 			return;
 		}
 
+		// 处理url
+		fileData.dataSet.forEach((file: any) => {
+			file.url = Util.url.extractDomain(getSettings().Host) + file.path;
+		});
+
 		// 创建文件列表容器
 		const fileListContainer = container.createDiv({
 			cls: "file-list-container",
@@ -282,9 +287,10 @@ class CategoryView extends ItemView {
 				const previewContainer = infoContainer.createDiv({
 					cls: "file-preview-container",
 				});
+
 				const previewImg = previewContainer.createEl("img", {
 					cls: "file-preview-img",
-					attr: { src: file.url.trim() },
+					attr: { src: file.url },
 				});
 
 				// 点击图片弹出大屏预览
@@ -326,14 +332,14 @@ class CategoryView extends ItemView {
 			const actionContainer = metaContainer.createDiv({
 				cls: "file-action-container",
 			});
-			
+
 			// 复制URL按钮
 			const copyButton = actionContainer.createEl("button", {
 				cls: "file-action-button copy-button",
 				attr: { title: i18n.t("file.copyUrl") },
 			});
 			setIcon(copyButton, "link");
-			
+
 			// 复制URL按钮点击事件
 			copyButton.addEventListener("click", (e) => {
 				e.stopPropagation();
@@ -479,28 +485,28 @@ class CategoryView extends ItemView {
 			return false;
 		}
 	}
-	
+
 	// 复制URL到剪贴板
 	copyToClipboard(url: string, fileName: string) {
 		if (!url) {
 			new Notice(i18n.t("file.copyFailed"));
 			return;
 		}
-		
+
 		// 创建临时文本区域
-		const textarea = document.createElement('textarea');
+		const textarea = document.createElement("textarea");
 		textarea.value = url;
-		textarea.style.position = 'absolute';
-		textarea.style.left = '-9999px';
+		textarea.style.position = "absolute";
+		textarea.style.left = "-9999px";
 		document.body.appendChild(textarea);
-		
+
 		// 选择并复制
 		textarea.select();
-		document.execCommand('copy');
-		
+		document.execCommand("copy");
+
 		// 移除临时元素
 		document.body.removeChild(textarea);
-		
+
 		// 显示成功提示
 		new Notice(i18n.t("file.copySuccess", { fileName: fileName }));
 	}

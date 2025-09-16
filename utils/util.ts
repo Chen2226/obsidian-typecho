@@ -100,5 +100,14 @@ export const Util = {
 		async fileToUint8Array(file: File): Promise<Uint8Array> {
 			return new Uint8Array(await file.arrayBuffer());
 		},
+	},
+	url: {
+		extractDomain(url: string) {
+			const domain = url.match(/https?:\/\/(www\.)?([^\s/]+)/);
+			if (domain) {
+				return domain[0];
+			}
+			return "";
+		},
 	}
 };
