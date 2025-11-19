@@ -7,7 +7,7 @@ export class HttpUtils {
 		return {
 			"Content-Type": "application/json",
 			token: getSettings().Token,
-			'Origin': getSettings().Host,
+			Origin: getSettings().Host,
 		};
 	}
 	private static getHost() {
@@ -24,7 +24,7 @@ export class HttpUtils {
 		url: string,
 		headers?: Record<string, string>
 	): Promise<ResponseType> {
-		return this.request("GET", url, null, headers);
+		return this.request("GET", url, undefined, headers);
 	}
 
 	/**
@@ -54,19 +54,34 @@ export class HttpUtils {
 		method: string,
 		url: string,
 		body?: any,
-		headers?: Record<string, string>,
+		headers?: Record<string, string>
 	): Promise<ResponseType> {
 		headers = {
 			...this.getHeaders(),
 			...headers,
 		};
 
+		const shouldHaveBody = !["GET", "HEAD", "DELETE"].includes(
+			method.toUpperCase()
+		);
 		const requestOptions = {
 			method: method,
 			url: this.getHost() + url,
 			headers: headers || {},
-			body: JSON.stringify(body),
 		};
+
+		// 只有需要时才添加 body
+		if (shouldHaveBody && body !== undefined && body !== null) {
+			(requestOptions as any).body =
+				typeof body === "string" ? body : JSON.stringify(body);
+			if (!headers?.["Content-Type"]) {
+				requestOptions.headers = {
+					...requestOptions.headers,
+					"Content-Type": "application/json",
+				};
+			}
+		}
+
 		try {
 			const response: RequestUrlResponse = await requestUrl(
 				requestOptions
