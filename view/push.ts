@@ -50,6 +50,7 @@ export class PushModal extends Modal {
 			},
 		});
 		for (const file of files) {
+			if (!file.path.endsWith(".md")) continue;
 			const option = selectEl.createEl("option", {
 				text: file.path,
 				value: file.path,

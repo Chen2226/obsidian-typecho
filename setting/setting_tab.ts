@@ -29,7 +29,9 @@ export class settingTab extends PluginSettingTab {
 			.setDesc(`Typecho${i18n.t("field.domainName")}`)
 			.addText((text) =>
 				text
-					.setPlaceholder(`${i18n.t("field.domainName")}/index.php/api`)
+					.setPlaceholder(
+						`${i18n.t("field.domainName")}/index.php/api`
+					)
 					.setValue(this.settings.Host)
 					.onChange(async (value) => {
 						this.settings.Host = value;
@@ -58,6 +60,19 @@ export class settingTab extends PluginSettingTab {
 					await this.refreshUserList(containerEl);
 				});
 			});
+
+		new Setting(containerEl)
+			.setName("粘贴图片自动上传")
+			.setDesc("启用后，Ctrl+V 粘贴图片将自动上传并插入 Markdown 链接")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.settings.enablePasteUpload)
+					.onChange(async (value) => {
+						this.settings.enablePasteUpload = value;
+						await this.plugin.saveSettings();
+					})
+			);
+			
 	}
 
 	private async refreshUserList(containerEl: HTMLElement): Promise<void> {

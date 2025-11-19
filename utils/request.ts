@@ -7,6 +7,7 @@ export class HttpUtils {
 		return {
 			"Content-Type": "application/json",
 			token: getSettings().Token,
+			'Origin': getSettings().Host,
 		};
 	}
 	private static getHost() {

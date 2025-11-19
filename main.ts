@@ -1,12 +1,18 @@
-import { Plugin, addIcon } from "obsidian";
+import { App, MarkdownView, Notice, Plugin, addIcon } from "obsidian";
 import { settingTab } from "./setting/setting_tab";
 import { PushModal } from "./view/push";
-import { CategoryView, VIEW_TYPE as ArticleViewType } from "./view/article_type";
+import { EditorView } from "@codemirror/view";
+import { Extension } from "@codemirror/state";
+import {
+	CategoryView,
+	VIEW_TYPE as ArticleViewType,
+} from "./view/article_type";
 import {
 	TypechoPluginSettings,
 	DEFAULT_SETTINGS,
 } from "./setting/plugin_settings";
 import i18n from "./utils/i18n";
+import { Util } from "./utils/util";
 let settings: TypechoPluginSettings;
 
 export default class TypechoPlugin extends Plugin {
@@ -29,12 +35,14 @@ export default class TypechoPlugin extends Plugin {
 
 		this.registerView(ArticleViewType, (leaf) => new CategoryView(leaf));
 		this.openPluginView();
+		this.registerPasteListener(this.app);
 	}
 
 	onunload() {}
 
 	async loadSettings() {
 		settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		return settings;
 	}
 
 	async saveSettings() {
@@ -49,6 +57,18 @@ export default class TypechoPlugin extends Plugin {
 				type: ArticleViewType,
 			});
 		}
+	}
+
+	private registerPasteListener(app: App) {
+		this.registerEvent(
+			this.app.workspace.on("editor-paste", async (evt, editor) => {
+				await Util.upload.handleImagePaste(
+					app,
+					editor,
+					evt.clipboardData!
+				);
+			})
+		);
 	}
 }
 

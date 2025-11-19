@@ -7,6 +7,7 @@ export interface TypechoPluginSettings {
 		screenName: string;
 		mail: string;
 	};
+	enablePasteUpload: boolean;
 }
 export const DEFAULT_SETTINGS: TypechoPluginSettings = {
 	Host: "",
@@ -17,4 +18,5 @@ export const DEFAULT_SETTINGS: TypechoPluginSettings = {
 		screenName: "",
 		mail: "",
 	},
+	enablePasteUpload: false,
 };

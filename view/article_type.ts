@@ -511,48 +511,256 @@ class CategoryView extends ItemView {
 		new Notice(i18n.t("file.copySuccess", { fileName: fileName }));
 	}
 
-	// 上传文件
+	// 上传文件（单/多文件，带进度条 + 限速延迟）
 	uploadFile(container: Element, page: number) {
-		// 创建隐藏的文件输入框
 		const fileInput = document.createElement("input");
 		fileInput.type = "file";
+		fileInput.multiple = true;
 		fileInput.style.display = "none";
 		document.body.appendChild(fileInput);
 
-		// 监听文件选择事件
 		fileInput.addEventListener("change", async () => {
-			if (fileInput.files && fileInput.files.length > 0) {
-				const file = fileInput.files[0];
-				const buffer = await Util.file.fileToUint8Array(file);
-				try {
-					// 显示上传中提示
-					new Notice(i18n.t("file.uploadingFile"));
-
-					// 发送上传请求
-					const response = await HttpUtils.post(
-						"/upload?authorId=" + getSettings().User.uid,
-						{
-							file: buffer,
-							fileName: file.name,
-						}
-					);
-
-					if (response) {
-						new Notice(i18n.t("file.uploadSuccess"));
-						// 刷新文件列表
-						this.loadFileList(container, page);
-					}
-				} catch (error) {
-					new Notice(i18n.t("file.uploadError"));
-				}
+			const files = Array.from(fileInput.files || []);
+			if (files.length === 0) {
+				document.body.removeChild(fileInput);
+				return;
 			}
 
-			// 移除文件输入框
-			document.body.removeChild(fileInput);
+			// 创建上传进度面板
+			const progressPanel = this.createUploadProgressPanel(files.length);
+			document.body.appendChild(progressPanel.element);
+
+			let isCancelled = false;
+
+			// 取消按钮逻辑
+			if (progressPanel.cancelButton) {
+				progressPanel.cancelButton.onclick = () => {
+					isCancelled = true;
+					progressPanel.updateStatus("已取消上传");
+					progressPanel.setProgress(0);
+					setTimeout(() => progressPanel.hide(), 1000);
+				};
+			}
+
+			try {
+				progressPanel.updateStatus("准备上传...");
+
+				for (let i = 0; i < files.length; i++) {
+					if (isCancelled) break;
+
+					const file = files[i];
+					const current = i + 1;
+					const total = files.length;
+
+					progressPanel.updateFile(file.name);
+					progressPanel.updateStatus(
+						`正在上传 (${current}/${total})`
+					);
+					progressPanel.setProgress(((current - 1) / total) * 100); // 上传前进度
+
+					try {
+						const buffer = await Util.file.fileToUint8Array(file);
+
+						const response = await HttpUtils.post(
+							"/upload?authorId=" + getSettings().User.uid,
+							{
+								file: buffer,
+								fileName: file.name,
+							}
+						);
+
+						if (!response) {
+							throw new Error("Upload response is empty");
+						}
+
+						// ✅ 单文件上传成功，更新进度为当前文件完成
+						progressPanel.setProgress((current / total) * 100);
+
+						// ⏱️ 限流延迟
+						if (i < files.length - 1) {
+							const delayMs =
+								300 + Math.floor(Math.random() * 300); // 300~600ms
+							await new Promise((resolve) =>
+								setTimeout(resolve, delayMs)
+							);
+						}
+					} catch (err) {
+						console.error(`Failed to upload ${file.name}:`, err);
+						progressPanel.updateStatus(
+							`⚠️ ${file.name} 失败，跳过`
+						);
+						progressPanel.setProgress((current / total) * 100);
+						await new Promise((resolve) =>
+							setTimeout(resolve, 500)
+						);
+					}
+				}
+
+				if (isCancelled) {
+					progressPanel.updateStatus("上传已取消");
+				} else {
+					progressPanel.updateStatus("✅ 全部上传完成！");
+					progressPanel.setProgress(100);
+					await new Promise((resolve) => setTimeout(resolve, 1000));
+					this.loadFileList(container, page); // 刷新列表
+				}
+			} catch (error) {
+				console.error("Upload process error:", error);
+				progressPanel.updateStatus("❌ 上传过程异常");
+			} finally {
+				// 自动隐藏
+				setTimeout(
+					() => progressPanel.hide(),
+					isCancelled ? 1500 : 2000
+				);
+				document.body.removeChild(fileInput);
+			}
 		});
 
-		// 触发文件选择对话框
 		fileInput.click();
+	}
+
+	// 辅助方法：创建上传进度面板
+	private createUploadProgressPanel(totalFiles: number) {
+		const panel = document.createElement("div");
+		panel.className = "obsidian-upload-progress-panel";
+
+		// CSS 注入（一次性，防止重复）
+		if (!document.getElementById("upload-progress-style")) {
+			const style = document.createElement("style");
+			style.id = "upload-progress-style";
+			style.textContent = `
+            .obsidian-upload-progress-panel {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 9999;
+                background: var(--background-secondary);
+                border: 1px solid var(--background-modifier-border);
+                border-radius: 8px;
+                padding: 12px 16px;
+                min-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                font-size: var(--font-ui-smaller);
+                transition: opacity 0.3s, transform 0.3s;
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .obsidian-upload-progress-panel.fade-out {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            .upload-progress-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+            }
+            .upload-progress-title {
+                font-weight: 600;
+                color: var(--text-normal);
+            }
+            .upload-progress-cancel {
+                background: none;
+                border: none;
+                color: var(--text-muted);
+                cursor: pointer;
+                font-size: 16px;
+                padding: 2px;
+                border-radius: 4px;
+            }
+            .upload-progress-cancel:hover {
+                color: var(--text-accent);
+                background: var(--background-modifier-hover);
+            }
+            .upload-progress-filename {
+                color: var(--text-faint);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-bottom: 4px;
+            }
+            .upload-progress-bar-container {
+                width: 100%;
+                height: 6px;
+                background: var(--background-modifier-border);
+                border-radius: 3px;
+                overflow: hidden;
+                margin: 6px 0;
+            }
+            .upload-progress-bar {
+                height: 100%;
+                background: var(--interactive-accent);
+                border-radius: 3px;
+                width: 0%;
+                transition: width 0.3s ease;
+            }
+            .upload-progress-status {
+                font-size: var(--font-ui-smaller);
+                color: var(--text-muted);
+                display: flex;
+                justify-content: space-between;
+            }
+        `;
+			document.head.appendChild(style);
+		}
+
+		panel.innerHTML = `
+        <div class="upload-progress-header">
+            <span class="upload-progress-title">📎 文件上传</span>
+            <button class="upload-progress-cancel" title="取消上传">×</button>
+        </div>
+        <div class="upload-progress-filename">-</div>
+        <div class="upload-progress-bar-container">
+            <div class="upload-progress-bar"></div>
+        </div>
+        <div class="upload-progress-status">
+            <span class="status-text">准备中...</span>
+            <span class="progress-percent">0%</span>
+        </div>
+    `;
+
+		const filenameEl = panel.querySelector(
+			".upload-progress-filename"
+		) as HTMLElement;
+		const barEl = panel.querySelector(
+			".upload-progress-bar"
+		) as HTMLElement;
+		const statusEl = panel.querySelector(".status-text") as HTMLElement;
+		const percentEl = panel.querySelector(
+			".progress-percent"
+		) as HTMLElement;
+		const cancelButton = panel.querySelector(
+			".upload-progress-cancel"
+		) as HTMLElement;
+
+		const api = {
+			element: panel,
+			cancelButton,
+
+			updateFile(filename: string) {
+				filenameEl.textContent = filename;
+			},
+
+			updateStatus(text: string) {
+				statusEl.textContent = text;
+			},
+
+			setProgress(percent: number) {
+				const p = Math.max(0, Math.min(100, Math.round(percent)));
+				barEl.style.width = `${p}%`;
+				percentEl.textContent = `${p}%`;
+			},
+
+			hide() {
+				panel.classList.add("fade-out");
+				setTimeout(() => {
+					if (panel.parentNode) panel.parentNode.removeChild(panel);
+				}, 300);
+			},
+		};
+
+		return api;
 	}
 
 	async onClose() {
