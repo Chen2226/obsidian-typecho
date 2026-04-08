@@ -7,6 +7,7 @@ export class HttpUtils {
 		return {
 			"Content-Type": "application/json",
 			token: getSettings().Token,
+			Origin: getSettings().Host,
 		};
 	}
 	private static getHost() {
@@ -23,13 +24,13 @@ export class HttpUtils {
 		url: string,
 		headers?: Record<string, string>
 	): Promise<ResponseType> {
-		return this.request("GET", url, null, headers);
+		return this.request("GET", url, undefined, headers);
 	}
 
 	/**
 	 * 发起 POST 请求
 	 * @param url 请求的 URL
-	 * @param body 请求体（可以是字符串或对象）
+	 * @param body 请求体（可以是字符串、对象或FormData）
 	 * @param headers 自定义请求头（可选）
 	 * @returns 返回响应数据
 	 */
@@ -56,15 +57,31 @@ export class HttpUtils {
 		headers?: Record<string, string>
 	): Promise<ResponseType> {
 		headers = {
-			...headers,
 			...this.getHeaders(),
+			...headers,
 		};
+
+		const shouldHaveBody = !["GET", "HEAD", "DELETE"].includes(
+			method.toUpperCase()
+		);
 		const requestOptions = {
 			method: method,
 			url: this.getHost() + url,
 			headers: headers || {},
-			body: body ? JSON.stringify(body) : undefined,
 		};
+
+		// 只有需要时才添加 body
+		if (shouldHaveBody && body !== undefined && body !== null) {
+			(requestOptions as any).body =
+				typeof body === "string" ? body : JSON.stringify(body);
+			if (!headers?.["Content-Type"]) {
+				requestOptions.headers = {
+					...requestOptions.headers,
+					"Content-Type": "application/json",
+				};
+			}
+		}
+
 		try {
 			const response: RequestUrlResponse = await requestUrl(
 				requestOptions

@@ -99,6 +99,241 @@
     transition: color 0.2s ease-in-out;
 }
 
+/* 文件列表样式 */
+.file-list-container {
+    padding: 8px;
+}
+
+.file-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.file-item {
+    align-items: center;
+    background-color: #1e1e1e;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.file-item:hover {
+    background-color: #2a2a2a;
+}
+
+.file-info-container {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.file-preview-container {
+    margin-right: 12px;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.file-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.file-preview-img:hover {
+    transform: scale(1.1);
+}
+
+.file-text-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.file-title {
+    color: #e0e0e0;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.file-type {
+    color: #888;
+    font-size: 12px;
+}
+
+.file-meta-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: 12px;
+}
+
+.file-time {
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.file-action-container {
+    display: flex;
+    gap: 8px;
+}
+
+.file-action-button {
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+    color: #888;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    transition: all 0.2s ease-in-out;
+}
+
+.file-action-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+}
+
+.delete-button:hover {
+    color: #ff5555;
+}
+
+/* 上传按钮和分页设置样式 */
+.upload-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 0 8px;
+}
+
+.page-size-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.page-size-label {
+    color: #888;
+    font-size: 14px;
+}
+
+.page-size-select {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #e0e0e0;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 8px;
+    transition: all 0.2s ease-in-out;
+}
+
+.page-size-select:hover, .page-size-select:focus {
+    border-color: #666;
+    outline: none;
+}
+
+.upload-button {
+    align-items: center;
+    background-color: #2a2a2a;
+    border: none;
+    border-radius: 4px;
+    color: #e0e0e0;
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    gap: 8px;
+    padding: 8px 12px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.upload-button:hover {
+    background-color: #3a3a3a;
+}
+
+/* 图片预览模态框样式 */
+.image-preview-modal {
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+.image-preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    max-width: 90vw;
+}
+
+.image-preview-title {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.image-preview-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.image-info-item {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: #ccc;
+    font-size: 12px;
+    margin: 0 6px 6px 0;
+    padding: 4px 8px;
+}
+
+.image-preview-img {
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    max-height: 80vh;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* 分页控件样式 */
+.pagination-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.pagination-button {
+    background-color: #2a2a2a;
+    border: none;
+    border-radius: 4px;
+    color: #e0e0e0;
+    cursor: pointer;
+    margin: 0 8px;
+    padding: 6px 12px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.pagination-button:hover {
+    background-color: #3a3a3a;
+}
+
+.pagination-info {
+    color: #888;
+    font-size: 14px;
+}
+
 /* 图标样式 */
 .tree-link-icon svg,
 .tree-article-icon.inline-icon svg {

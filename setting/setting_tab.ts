@@ -29,7 +29,9 @@ export class settingTab extends PluginSettingTab {
 			.setDesc(`Typecho${i18n.t("field.domainName")}`)
 			.addText((text) =>
 				text
-					.setPlaceholder(`${i18n.t("field.domainName")}/index.php/api`)
+					.setPlaceholder(
+						`${i18n.t("field.domainName")}/index.php/api`
+					)
 					.setValue(this.settings.Host)
 					.onChange(async (value) => {
 						this.settings.Host = value;
@@ -58,6 +60,31 @@ export class settingTab extends PluginSettingTab {
 					await this.refreshUserList(containerEl);
 				});
 			});
+
+		new Setting(containerEl)
+			.setName(i18n.t("file.enablePasteUpload"))
+			.setDesc(i18n.t("file.enablePasteUploadDesc"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.settings.enablePasteUpload)
+					.onChange(async (value) => {
+						this.settings.enablePasteUpload = value;
+						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(containerEl)
+			.setName(i18n.t("file.removeMetadata"))
+			.setDesc(i18n.t("file.removeMetadataDesc"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.settings.removeMetadata)
+					.onChange(async (value) => {
+						this.settings.removeMetadata = value;
+						await this.plugin.saveSettings();
+					})
+			);
+			
 	}
 
 	private async refreshUserList(containerEl: HTMLElement): Promise<void> {

@@ -7,6 +7,9 @@ export interface TypechoPluginSettings {
 		screenName: string;
 		mail: string;
 	};
+	enablePasteUpload: boolean;
+	removeMetadata: boolean;
+	slugMapping: Record<string, string>;
 }
 export const DEFAULT_SETTINGS: TypechoPluginSettings = {
 	Host: "",
@@ -17,4 +20,7 @@ export const DEFAULT_SETTINGS: TypechoPluginSettings = {
 		screenName: "",
 		mail: "",
 	},
+	enablePasteUpload: false,
+	removeMetadata: false,
+	slugMapping: {},
 };

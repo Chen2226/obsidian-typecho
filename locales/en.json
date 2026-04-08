@@ -17,7 +17,9 @@
         "title": "Sync to Typecho",
         "publish": "publish",
         "adding": "adding",
-        "addSuccess": "add success"
+        "addSuccess": "add success",
+        "advancedOptions": "Advanced Options",
+        "alias": "Alias"
     },
     "error": {
         "requestFailed": "Request failed, please check the network or API configuration",
@@ -31,10 +33,33 @@
     "field": {
         "title": "title",
         "tag": "tag",
+        "file": "file",
         "domainName": "domain name",
         "category": "category",
         "typechoUser": "Typecho user, the user who uses the operation",
         "article": "article",
         "allArticle": "all article"
+    },
+    "file": {
+        "uploadFile": "Upload File",
+        "deleteFile": "Delete File",
+        "copyUrl": "Copy URL to Clipboard",
+        "uploadingFile": "Uploading file...",
+        "uploadSuccess": "File uploaded successfully",
+        "uploadFailed": "File upload failed",
+        "uploadError": "Error occurred during file upload",
+        "deleteSuccess": "File deleted successfully",
+        "deleteFailed": "File deletion failed",
+        "deleteError": "Error occurred during file deletion",
+        "deleteConfirm": "Are you sure you want to delete the file {fileName}?",
+        "copySuccess": "URL for {fileName} has been copied to clipboard",
+        "copyFailed": "Copy failed: URL is empty",
+        "itemsPerPage": "Items per page",
+        "fileType": "Type",
+        "fileSize": "Size",
+        "enablePasteUpload": "Auto Upload Pasted Images",
+        "enablePasteUploadDesc": "Enable automatic upload and Markdown link insertion when pasting images with Ctrl+V",
+        "removeMetadata": "Remove Metadata",
+        "removeMetadataDesc": "Automatically remove YAML metadata (--- ... ---) from the top of the article during publication"
     }
 }
