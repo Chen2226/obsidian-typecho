@@ -1,5 +1,5 @@
-import { App, Modal, Notice } from "obsidian";
-import { getSettings } from "../main";
+import { App, Modal, Notice, Setting } from "obsidian";
+import { getSettings, saveSettings } from "../main";
 import { addMetas } from "./add_metasl";
 import { HttpUtils } from "../utils/request";
 import i18n from "../utils/i18n";
@@ -11,6 +11,8 @@ export class PushModal extends Modal {
 	notice: Notice;
 	baseFileName = "";
 	title = "";
+	slug = "";
+	slugInput: HTMLInputElement;
 	content = "";
 	selectedTags: string[] = [];
 	selectedCategories: string[] = [];
@@ -79,6 +81,41 @@ export class PushModal extends Modal {
 			}
 		});
 
+		// 高级选项部分 (Slug)
+		const advancedDetails = contentEl.createEl("details", {
+			attr: {
+				style: "margin-bottom: 15px; border: 1px solid var(--background-modifier-border); border-radius: 4px; padding: 10px;",
+			},
+		});
+		advancedDetails.createEl("summary", {
+			text: i18n.t("sync.advancedOptions"),
+			attr: {
+				style: "cursor: pointer; color: var(--text-muted); font-size: 0.9em;",
+			},
+		});
+
+		const slugContainer = advancedDetails.createDiv({
+			attr: { style: "margin-top: 10px;" },
+		});
+		slugContainer.createEl("label", {
+			text: i18n.t("sync.alias"),
+			attr: {
+				style: "display: block; font-size: 0.8em; color: var(--text-muted); margin-bottom: 5px;",
+			},
+		});
+
+		this.slugInput = slugContainer.createEl("input", {
+			attr: {
+				type: "text",
+				placeholder: "Slug",
+				style: "width: 100%; border: 1px solid var(--background-modifier-border); border-radius: 4px; color: var(--text-normal);",
+			},
+		});
+		this.slugInput.value = this.slug; // 使用 setTitleFromFileName 中已经设置好的值
+		this.slugInput.addEventListener("input", (event) => {
+			this.slug = (event.target as HTMLInputElement).value;
+		});
+
 		// 发布按钮
 		const button = contentEl.createEl("button", {
 			text: i18n.t("sync.publish"),
@@ -95,15 +132,29 @@ export class PushModal extends Modal {
 			try {
 				const mid = [...this.selectedCategories, ...this.selectedTags];
 
+				let finalContent = this.content;
+				// 如果开启了去除元数据
+				if (getSettings().removeMetadata) {
+					// 匹配开头的 --- ... ---
+					const yamlRegex = /^---\s*[\s\S]*?---\s*/;
+					finalContent = finalContent.replace(yamlRegex, "");
+				}
+
 				const data = {
 					title: this.title,
-					text: "<!--markdown-->" + this.content,
+					text: "<!--markdown-->" + finalContent,
 					authorId: getSettings().User?.uid,
 					mid: mid.join(","),
-					slug: "obsidian-" + Util.hash.simpleHash(this.baseFileName),
+					slug: this.slug,
 				};
 				const response = await HttpUtils.post("/postArticle", data);
 				if (response.status === "success") {
+					// 保存 slug 映射
+					if (this.baseFileName) {
+						getSettings().slugMapping[this.baseFileName] =
+							this.slug;
+						await saveSettings();
+					}
 					new Notice(
 						`${i18n.t("sync.publish")} ${i18n.t("common.success")}`
 					);
@@ -149,6 +200,17 @@ export class PushModal extends Modal {
 		this.baseFileName = file.basename;
 		this.title = file.basename;
 		titleInput.value = this.title;
+
+		// 设置 Slug
+		const savedSlug = getSettings().slugMapping[this.baseFileName];
+		if (savedSlug) {
+			this.slug = savedSlug;
+		} else {
+			this.slug = "obsidian-" + Util.hash.simpleHash(this.baseFileName);
+		}
+		if (this.slugInput) {
+			this.slugInput.value = this.slug;
+		}
 	}
 
 	/**

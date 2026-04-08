@@ -8,6 +8,8 @@ export interface TypechoPluginSettings {
 		mail: string;
 	};
 	enablePasteUpload: boolean;
+	removeMetadata: boolean;
+	slugMapping: Record<string, string>;
 }
 export const DEFAULT_SETTINGS: TypechoPluginSettings = {
 	Host: "",
@@ -19,4 +21,6 @@ export const DEFAULT_SETTINGS: TypechoPluginSettings = {
 		mail: "",
 	},
 	enablePasteUpload: false,
+	removeMetadata: false,
+	slugMapping: {},
 };

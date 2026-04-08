@@ -62,13 +62,25 @@ export class settingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("粘贴图片自动上传")
-			.setDesc("启用后，Ctrl+V 粘贴图片将自动上传并插入 Markdown 链接")
+			.setName(i18n.t("file.enablePasteUpload"))
+			.setDesc(i18n.t("file.enablePasteUploadDesc"))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.settings.enablePasteUpload)
 					.onChange(async (value) => {
 						this.settings.enablePasteUpload = value;
+						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(containerEl)
+			.setName(i18n.t("file.removeMetadata"))
+			.setDesc(i18n.t("file.removeMetadataDesc"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.settings.removeMetadata)
+					.onChange(async (value) => {
+						this.settings.removeMetadata = value;
 						await this.plugin.saveSettings();
 					})
 			);

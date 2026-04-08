@@ -17,7 +17,9 @@
         "title": "同步到Typecho",
         "publish": "发布",
         "adding": "添加中",
-        "addSuccess": "添加成功"
+        "addSuccess": "添加成功",
+        "advancedOptions": "高级选项",
+        "alias": "别名"
     },
     "error": {
         "requestFailed": "请求失败，请检查网络或 API 配置",
@@ -56,6 +58,9 @@
         "itemsPerPage": "每页显示",
         "fileType": "类型",
         "fileSize": "大小",
-        "fileTime": "时间"
+        "enablePasteUpload": "粘贴图片自动上传",
+        "enablePasteUploadDesc": "启用后，Ctrl+V 粘贴图片将自动上传并插入 Markdown 链接",
+        "removeMetadata": "去除元数据",
+        "removeMetadataDesc": "发布时自动去除文章顶部的 YAML 元数据 (--- ... ---)"
     }
 }
